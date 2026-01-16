@@ -7,8 +7,10 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Inter', 'sans-serif'],
-                display: ['Cabinet Grotesk', 'sans-serif'], // Si la instalaste, sino usa Inter
+                sans: ['Raleway', 'sans-serif'], // Normal text now Raleway
+                display: ['Righteous', 'sans-serif'], // Titles now Righteous
+                raleway: ['Raleway', 'sans-serif'],
+                righteous: ['Righteous', 'cursive'],
             },
             colors: {
                 // Tu paleta VANTRA exacta
