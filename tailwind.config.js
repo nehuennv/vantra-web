@@ -7,41 +7,32 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Raleway', 'sans-serif'], // Normal text now Raleway
-                display: ['Righteous', 'sans-serif'], // Titles now Righteous
+                sans: ['Raleway', 'sans-serif'],
+                display: ['Righteous', 'sans-serif'],
                 raleway: ['Raleway', 'sans-serif'],
                 righteous: ['Righteous', 'cursive'],
             },
             colors: {
-                // Tu paleta VANTRA exacta
                 vantra: {
-                    DEFAULT: '#EDF246',   // Added for bg-vantra
-                    neon: '#EDF246',      // El Amarillo Ácido (Accent)
-                    dark: '#43443E',      // El Gris Oliva (Base)
-                    bg: '#121211',        // Fondo Profundo (Casi negro, para contraste)
-                    card: '#1E1E1C',      // Fondo de tarjetas (ligeramente más claro)
-                },
-                dark: {
-                    900: '#121211',       // Alias for vantra-bg
-                    base: '#1E1E1C',      // Alias for vantra-card
+                    neon: '#EDF246',      // Tu Amarillo Ácido (Accent Principal)
+                    // EL AZUL SUAVE "APPLE" (Usar para brillos secundarios)
+                    ice: '#A0E9FF',
+
+                    // LA BASE "PREMIUM DARK" (No es negro, es gris azulado profundo)
+                    bg: '#050507',
+                    card: '#0A0A0B',
+                    surface: '#121214',
                 }
             },
             backgroundImage: {
-                'hero-glow': 'radial-gradient(circle at 50% 50%, rgba(237, 242, 70, 0.15) 0%, rgba(18, 18, 17, 0) 50%)',
+                // EL DEGRADADO QUE QUERÍAS (Amarillo + Azul + Negro)
+                'aurora': 'conic-gradient(from 180deg at 50% 50%, #121214 0deg, #0A0A0B 120deg, #1E3A8A 180deg, #A0E9FF 240deg, #EDF246 300deg, #121214 360deg)',
+                'glass-gradient': 'linear-gradient(rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01))',
             },
-            animation: {
-                'fade-in': 'fadeIn 0.8s ease-out forwards',
-                'float': 'float 6s ease-in-out infinite',
-            },
-            keyframes: {
-                fadeIn: {
-                    '0%': { opacity: '0', transform: 'translateY(10px)' },
-                    '100%': { opacity: '1', transform: 'translateY(0)' },
-                },
-                float: {
-                    '0%, 100%': { transform: 'translateY(0)' },
-                    '50%': { transform: 'translateY(-10px)' },
-                }
+            boxShadow: {
+                // Sombras de luz, no de oscuridad (Glows)
+                'glow': '0 0 40px -10px rgba(237, 242, 70, 0.3)',
+                'glow-blue': '0 0 40px -10px rgba(160, 233, 255, 0.3)',
             }
         },
     },

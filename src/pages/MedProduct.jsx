@@ -5,7 +5,7 @@ import { Activity, HeartPulse, ShieldCheck, Microscope, ArrowRight } from "lucid
 
 export default function MedProduct() {
     return (
-        <div className="min-h-screen bg-[#080c14] text-white selection:bg-cyan-400 selection:text-black font-sans pt-24 pb-20">
+        <div className="min-h-screen text-white selection:bg-cyan-400 selection:text-black font-sans pt-24 pb-20">
             {/* Dynamic Background for Med - Clean, Blue/Cyan Tones */}
             <div className="fixed inset-0 z-0 pointer-events-none">
                 <div className="absolute top-[-20%] left-[20%] w-[900px] h-[900px] bg-cyan-500/10 rounded-full blur-[130px]" />

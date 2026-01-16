@@ -5,7 +5,7 @@ import { Utensils, ChefHat, BarChart3, ArrowRight } from "lucide-react";
 
 export default function RestoProduct() {
     return (
-        <div className="min-h-screen bg-vantra-bg text-white selection:bg-vantra-neon selection:text-black font-sans pt-24 pb-20">
+        <div className="min-h-screen text-white selection:bg-vantra-neon selection:text-black font-sans pt-24 pb-20">
             {/* Dynamic Background */}
             <div className="fixed inset-0 z-0 pointer-events-none">
                 <div className="absolute top-[-20%] right-[-10%] w-[800px] h-[800px] bg-vantra-neon/5 rounded-full blur-[120px] mix-blend-screen" />

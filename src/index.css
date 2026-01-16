@@ -7,7 +7,7 @@
 
 @layer base {
   body {
-    @apply bg-dark-900 text-white font-sans antialiased selection:bg-vantra selection:text-dark-900;
+    @apply bg-vantra-bg text-white font-sans antialiased selection:bg-vantra-neon selection:text-vantra-bg;
   }
 
   h1,
@@ -22,7 +22,7 @@
 
 @layer utilities {
   .glass-panel {
-    @apply bg-dark-base/30 backdrop-blur-md border border-white/10 shadow-xl;
+    @apply bg-vantra-surface/30 backdrop-blur-md border border-white/10 shadow-xl;
   }
 
   .text-glow {

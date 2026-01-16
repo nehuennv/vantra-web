@@ -93,10 +93,10 @@ const ServiceCard = ({ service, index }) => {
 
 const Services = () => {
   return (
-    <section className="relative bg-[#121211] border-t border-white/10" id="servicios">
+    <section className="relative border-t border-white/10" id="servicios">
 
       {/* Section Header - Compact & Horizontal */}
-      <div className="px-6 md:px-12 py-12 md:py-16 border-b border-white/10 bg-[#121211]">
+      <div className="px-6 md:px-12 py-12 md:py-16 border-b border-white/10">
         <div className="container mx-auto flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div className="max-w-3xl">
             <h2 className="text-[#EDF246] font-mono text-xs tracking-[0.3em] uppercase mb-3">
