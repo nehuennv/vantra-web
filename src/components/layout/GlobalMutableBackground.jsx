@@ -1,65 +1,92 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 
 const GlobalMutableBackground = () => {
-  const { scrollYProgress } = useScroll();
+    const containerRef = useRef(null);
 
-  // Suavizamos el scroll para que el fondo no "vibre" y se sienta como fluido (Apple feel)
-  const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 100,
-    damping: 30,
-    restDelta: 0.001
-  });
+    // 1. Hook de Scroll Global
+    const { scrollYProgress } = useScroll();
 
-  // Mapeamos el scroll (0 a 1) a la posición Y del fondo (0% a -50%)
-  // Esto hace que el fondo suba lentamente mientras tú bajas.
-  const yRange = useTransform(smoothProgress, [0, 1], ['0%', '-50%']);
-  
-  // Opacidad dinámica: El neón brilla más al principio y al final
-  const neonOpacity = useTransform(smoothProgress, [0, 0.2, 0.8, 1], [0.4, 0.1, 0.1, 0.3]);
-  
-  // El Azul aparece solo en el medio (Servicios/Precios)
-  const blueOpacity = useTransform(smoothProgress, [0.1, 0.5, 0.9], [0, 0.5, 0]);
+    // 2. Suavizado de Physics (Mass & Damping para feel "pesado" y premium)
+    const smoothProgress = useSpring(scrollYProgress, {
+        mass: 0.5,
+        stiffness: 50,
+        damping: 20,
+        restDelta: 0.001
+    });
 
-  return (
-    <div className="fixed inset-0 z-[-1] overflow-hidden bg-[#050507] pointer-events-none">
-      {/* EL TELÓN GIGANTE MÓVIL 
-        Es mucho más alto que la pantalla para poder "deslizarse".
+    // --- LOGICA DE ANIMACIÓN (ORQUESTACIÓN) ---
+
+    // ORBE 1: NEON (#EDF246) - La Energía Inicial
+    // Comienza arriba al centro. Al bajar, se desplaza hacia abajo y se desvanece suavemente.
+    const neonY = useTransform(smoothProgress, [0, 0.4], ['-20%', '40%']);
+    const neonOpacity = useTransform(smoothProgress, [0, 0.3, 0.5], [0.6, 0.4, 0]);
+    const neonScale = useTransform(smoothProgress, [0, 0.4], [1, 1.5]);
+
+    // ORBE 2: ICE BLUE (#A0E9FF) - La Confianza Tecnológica (Servicios/Ecosistema)
+    // Entra desde la derecha cuando el usuario hace scroll hacia los servicios.
+    const blueX = useTransform(smoothProgress, [0.1, 0.4], ['100%', '20%']);
+    const blueOpacity = useTransform(smoothProgress, [0.1, 0.4, 0.7], [0, 0.5, 0]);
+    const blueScale = useTransform(smoothProgress, [0.3, 0.6], [0.8, 1.2]);
+
+    // ORBE 3: DEEP BLUE (#1E3A8A) - Profundidad y Contraste
+    // Siempre presente pero muy sutil en el fondo, cobra vida al final para dar seriedad.
+    const deepOpacity = useTransform(smoothProgress, [0.5, 0.9], [0.1, 0.4]);
+    const deepY = useTransform(smoothProgress, [0.5, 1], ['100%', '50%']);
+
+
+    return (
+        <div className="fixed inset-0 z-[-1] bg-[#050507] overflow-hidden pointer-events-none">
+
+            {/* --- SCENE COMPOSITION --- */}
+
+            {/* 1. NEON ORB (Hero Focus) */}
+            <motion.div
+                style={{
+                    top: neonY,
+                    left: '50%',
+                    x: '-50%',
+                    opacity: neonOpacity,
+                    scale: neonScale
+                }}
+                className="absolute w-[80vh] h-[80vh] rounded-full bg-[#EDF246] blur-[150px] opacity-60"
+            />
+
+            {/* 2. ICE BLUE ORB (Side Entry) */}
+            <motion.div
+                style={{
+                    top: '30%',
+                    right: '0%',
+                    x: blueX,
+                    opacity: blueOpacity,
+                    scale: blueScale
+                }}
+                className="absolute w-[70vh] h-[70vh] rounded-full bg-[#A0E9FF] blur-[180px] opacity-0"
+            />
+
+            {/* 3. DEEP BLUE BASE (Bottom Anchoring) */}
+            <motion.div
+                style={{
+                    bottom: '-20%',
+                    left: '20%',
+                    y: deepY, // Moves up slightly at the end
+                    opacity: deepOpacity
+                }}
+                className="absolute w-[100vh] h-[80vh] rounded-full bg-[#1E3A8A] blur-[200px]"
+            />
+
+            {/* 4. NOISE GRAIN OVERLAY (Cinema Feel) 
+          Esto unifica los degradados y evita el "banding" en pantallas malas.
       */}
-      <motion.div 
-        style={{ y: yRange }}
-        className="absolute inset-0 w-full h-[300vh] w-full"
-      >
-        {/* FASE 1: HERO (Top) - Neón Predominante */}
-        <div className="absolute top-0 left-0 w-full h-[100vh]">
-            <motion.div 
-                style={{ opacity: neonOpacity }}
-                className="absolute top-[20%] left-[50%] -translate-x-1/2 w-[800px] h-[800px] rounded-full bg-[#EDF246] blur-[150px]" 
+            <div className="absolute inset-0 w-full h-full opacity-[0.03] pointer-events-none mix-blend-overlay"
+                style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }}
             />
-        </div>
 
-        {/* FASE 2: MIDDLE (Servicios) - Azul Hielo Calmado */}
-        <div className="absolute top-[100vh] left-0 w-full h-[100vh]">
-            <motion.div 
-                style={{ opacity: blueOpacity }}
-                className="absolute top-[30%] right-[10%] w-[900px] h-[900px] rounded-full bg-[#A0E9FF] blur-[180px]" 
-            />
-             <motion.div 
-                style={{ opacity: blueOpacity }}
-                className="absolute bottom-[20%] left-[10%] w-[600px] h-[600px] rounded-full bg-[#1E3A8A] blur-[150px]" 
-            />
-        </div>
+            {/* 5. VIGNETTE (Focus Center) */}
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,#050507_120%)]" />
 
-        {/* FASE 3: FOOTER (Bottom) - Vuelta a la oscuridad con acento */}
-        <div className="absolute top-[200vh] left-0 w-full h-[100vh]">
-            <div className="absolute bottom-0 w-full h-1/2 bg-gradient-to-t from-[#EDF246]/10 to-transparent" />
         </div>
-
-        {/* TEXTURA DE RUIDO GLOBAL (Unifica todo) */}
-        <div className="absolute inset-0 w-full h-full opacity-[0.05] bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-overlay" />
-      </motion.div>
-    </div>
-  );
+    );
 };
 
 export default GlobalMutableBackground;

@@ -4,7 +4,7 @@ import Navbar from './components/layout/Navbar';
 import Home from './pages/Home';
 import RestoProduct from './pages/RestoProduct';
 import MedProduct from './pages/MedProduct';
-import GlobalMutableBackground from './components/layout/GlobalMutableBackground';
+import GlobalAuroraBackground from './components/layout/GlobalAuroraBackground';
 import SmoothScroll from './components/layout/SmoothScroll';
 
 // Un componente auxiliar para hacer scroll al top al cambiar de ruta
@@ -25,8 +25,8 @@ function App() {
 
         <ScrollToTop /> {/* Reset del scroll al navegar */}
 
-        {/* 2. El Fondo Global "Journey" (Se mueve con el scroll) */}
-        <GlobalMutableBackground />
+        {/* 2. El Fondo Global "Aurora" (Unified Gradient) */}
+        <GlobalAuroraBackground />
 
         {/* 3. El Contenido (Transparente para dejar ver el fondo) */}
         <div className="min-h-screen font-sans relative text-white selection:bg-[#EDF246] selection:text-black">
