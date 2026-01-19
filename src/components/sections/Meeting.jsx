@@ -15,7 +15,7 @@ const Meeting = () => {
                         transition={{ duration: 0.6 }}
                         viewport={{ once: true }}
                     >
-                        <h2 className="font-display text-4xl md:text-5xl lg:text-6xl text-white font-bold mb-4">
+                        <h2 className="font-display text-4xl md:text-5xl lg:text-6xl text-white mb-4">
                             Hablemos de tu proyecto.
                         </h2>
                         <h3 className="text-2xl md:text-3xl text-[#A0E9FF] font-light mb-8">

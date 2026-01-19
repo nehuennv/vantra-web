@@ -72,7 +72,7 @@ export default function RestoProduct() {
                                                     <div className="h-4 w-24 bg-white/20 rounded mb-2" />
                                                     <div className="h-3 w-16 bg-white/10 rounded" />
                                                 </div>
-                                                <div className="text-vantra-neon font-mono">$24.00</div>
+                                                <div className="text-vantra-neon font-bold">$24.00</div>
                                             </div>
                                         ))}
                                     </div>

@@ -1,53 +1,70 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 
 const GlobalAuroraBackground = () => {
+    // Scroll handling for subtle "breathing" and movement
     const { scrollYProgress } = useScroll();
 
-    // Physics ajustadas para un movimiento más "brusco" y reactivo (High Stiffness, Low Damping)
+    // Smooth physics for organic feel (High damping = heavy/slow)
     const smoothProgress = useSpring(scrollYProgress, {
-        mass: 0.1,       // Muy ligero para arrancar rápido
-        stiffness: 120,   // Alta tensión para seguir el scroll de cerca
-        damping: 20,     // Menor amortiguación para frenar más seco
+        mass: 0.5,
+        stiffness: 50,
+        damping: 40,
         restDelta: 0.001
     });
 
-    // Mapeo Ampliado: Rotación completa (360deg) para que se mueva mucho más al hacer scroll
-    const rotate = useTransform(smoothProgress, [0, 1], ['0deg', '360deg']);
+    // Slow rotation linked to scroll, but very small range to avoid dizzy effect
+    const rotate = useTransform(smoothProgress, [0, 1], ['0deg', '90deg']);
 
-    // Parallax vertical aumentado
-    const y = useTransform(smoothProgress, [0, 1], ['0%', '25%']);
+    // Subtle parallax
+    const y = useTransform(smoothProgress, [0, 1], ['0%', '20%']);
+
+    // Opacity pulse (Breathing effect) - Independent of scroll
+    const breathe = {
+        opacity: [0.6, 0.8, 0.6],
+        scale: [1, 1.15, 1],
+        transition: {
+            duration: 15, // A bit faster (was 20)
+            repeat: Infinity,
+            ease: "easeInOut"
+        }
+    };
 
     return (
-        <div className="fixed inset-0 z-[-1] overflow-hidden bg-[#3A3939] pointer-events-none">
+        <div className="fixed inset-0 z-[-1] overflow-hidden bg-[#050507] pointer-events-none">
 
+            {/* ATMOSPHERE LAYER (Static Dark Base) */}
+            <div className="absolute inset-0 bg-[#050507]" />
+
+            {/* AURORA LAYER */}
             <motion.div
-                style={{
-                    rotate,
-                    y,
-                }}
+                style={{ rotate, y }}
+                animate={breathe}
                 className="absolute top-[-50%] left-[-50%] w-[200vw] h-[200vh]"
             >
                 <div
-                    className="w-full h-full blur-[140px] md:blur-[200px] opacity-70"
+                    className="w-full h-full blur-[150px] opacity-80"
                     style={{
-                        background: `
-                    conic-gradient(
-                        from 0deg at 50% 50%,
-                        #3A3939 0deg,
-                        #5C52F3 60deg,
-                        #E6F7EF 120deg,
-                        #E3EC63 180deg,
-                        #E6F7EF 240deg,
-                        #5C52F3 300deg,
-                        #3A3939 360deg
-                    )
-                `
+                        background: `conic-gradient(
+                            from 0deg at 50% 50%,
+                            #050507 0deg,
+                            #050507 100deg,
+                            #1E3A8A 160deg,
+                            #050507 200deg,
+                            #A0E9FF 240deg,
+                            #050507 280deg,
+                            #EDF246 320deg,
+                            #050507 360deg
+                        )`
                     }}
                 />
             </motion.div>
 
-            {/* NOISE OVERLAY */}
+            {/* LIGHT SPOTS (Ambient Light) */}
+            <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-[#A0E9FF]/5 blur-[150px] rounded-full pointer-events-none mix-blend-screen" />
+            <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-[#EDF246]/5 blur-[150px] rounded-full pointer-events-none mix-blend-screen" />
+
+            {/* NOISE LAYER (Texture) */}
             <div className="absolute inset-0 w-full h-full opacity-[0.05] bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-overlay" />
 
         </div>

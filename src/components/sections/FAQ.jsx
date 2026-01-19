@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Plus, Minus, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Card from '../ui/Card';
 
 const faqItems = [
     {
@@ -47,12 +48,12 @@ const faqItems = [
 
 const FAQItem = ({ item, isOpen, toggle }) => {
     return (
-        <div className="border-b border-white/10">
+        <div className="border-b border-white/5 last:border-none">
             <button
                 onClick={toggle}
                 className="w-full py-6 flex items-center justify-between text-left group"
             >
-                <span className={`text-lg md:text-xl font-medium transition-colors ${isOpen ? 'text-[#EDF246]' : 'text-white group-hover:text-gray-300'}`}>
+                <span className={`text-lg md:text-xl font-bold transition-colors ${isOpen ? 'text-[#EDF246]' : 'text-white group-hover:text-gray-300'}`}>
                     {item.q}
                 </span>
                 <span className={`p-2 rounded-full border border-white/10 transition-all ${isOpen ? 'bg-[#EDF246] text-black rotate-180' : 'bg-transparent text-white group-hover:border-white/30'}`}>
@@ -68,7 +69,7 @@ const FAQItem = ({ item, isOpen, toggle }) => {
                         transition={{ duration: 0.3, ease: "easeInOut" }}
                         className="overflow-hidden"
                     >
-                        <p className="pb-8 text-gray-400 leading-relaxed max-w-3xl">
+                        <p className="pb-8 text-gray-400 leading-relaxed max-w-3xl font-medium">
                             {item.a}
                         </p>
                     </motion.div>
@@ -85,20 +86,22 @@ const FAQ = () => {
         <section className="relative py-24 bg-transparent">
             <div className="container mx-auto px-6 max-w-4xl">
 
-                <h2 className="font-display text-4xl md:text-5xl font-bold text-white mb-16 text-center">
+                <h2 className="font-display text-4xl md:text-5xl text-white mb-16 text-center">
                     ¿Tenés dudas? <span className="text-[#A0E9FF]">Te las resolvemos.</span>
                 </h2>
 
-                <div className="flex flex-col">
-                    {faqItems.map((item, index) => (
-                        <FAQItem
-                            key={index}
-                            item={item}
-                            isOpen={openIndex === index}
-                            toggle={() => setOpenIndex(prev => prev === index ? null : index)}
-                        />
-                    ))}
-                </div>
+                <Card className="!p-8 md:!p-12">
+                    <div className="flex flex-col">
+                        {faqItems.map((item, index) => (
+                            <FAQItem
+                                key={index}
+                                item={item}
+                                isOpen={openIndex === index}
+                                toggle={() => setOpenIndex(prev => prev === index ? null : index)}
+                            />
+                        ))}
+                    </div>
+                </Card>
 
                 <div className="mt-16 text-center">
                     <a href="https://wa.me/" className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors">

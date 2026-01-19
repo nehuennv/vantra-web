@@ -1,5 +1,6 @@
 import React from 'react';
 import { Zap, TrendingUp, Users, HeartHandshake, ArrowRight } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 const pillars = [
     {
@@ -24,6 +25,23 @@ const pillars = [
     }
 ];
 
+const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: { staggerChildren: 0.1 }
+    }
+};
+
+const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+        y: 0,
+        opacity: 1,
+        transition: { type: "spring", stiffness: 50 }
+    }
+};
+
 const Differential = () => {
     return (
         <section className="relative py-24 bg-transparent">
@@ -33,31 +51,47 @@ const Differential = () => {
             <div className="container mx-auto px-6">
 
                 {/* Header */}
-                <div className="mb-20 md:text-center max-w-3xl mx-auto">
-                    <h2 className="font-display text-4xl md:text-5xl lg:text-6xl text-white font-bold mb-6 leading-tight">
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.8 }}
+                    className="mb-20 md:text-center max-w-3xl mx-auto"
+                >
+                    <h2 className="font-display text-4xl md:text-5xl lg:text-6xl text-white mb-6 leading-tight">
                         Nuestra ventaja diferencial. <span className="text-gray-500">Por qué VANTRA es tu mejor decisión.</span>
                     </h2>
                     <p className="text-xl text-gray-400 font-light">
                         No somos una agencia más. Somos el equipo técnico y estratégico que te faltaba.
                     </p>
-                </div>
+                </motion.div>
 
                 {/* Pillars Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-20">
+                <motion.div
+                    variants={containerVariants}
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, margin: "-50px" }}
+                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-20"
+                >
                     {pillars.map((pillar, index) => (
-                        <div key={index} className="group p-8 rounded-2xl border border-white/5 bg-white/[0.01] hover:bg-white/[0.03] transition-colors duration-300">
+                        <motion.div
+                            key={index}
+                            variants={itemVariants}
+                            className="group p-8 rounded-2xl border border-white/5 bg-white/[0.01] hover:bg-white/[0.03] transition-colors duration-300"
+                        >
                             <div className="mb-6 inline-flex p-4 rounded-xl bg-[#EDF246]/10 text-[#EDF246] group-hover:scale-110 transition-transform duration-300">
                                 <pillar.icon size={32} strokeWidth={1.5} />
                             </div>
-                            <h3 className="font-display text-xl text-white mb-4 group-hover:text-[#EDF246] transition-colors font-bold">
+                            <h3 className="font-display text-xl text-white mb-4 group-hover:text-[#EDF246] transition-colors">
                                 {pillar.title}
                             </h3>
                             <p className="text-gray-400 leading-relaxed text-sm">
                                 {pillar.desc}
                             </p>
-                        </div>
+                        </motion.div>
                     ))}
-                </div>
+                </motion.div>
 
                 {/* Bottom CTA */}
                 <div className="text-center">

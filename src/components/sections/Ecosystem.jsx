@@ -1,127 +1,135 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowUpRight, HeartPulse, Utensils, Database, ShieldCheck, Activity, Smartphone, Lock } from 'lucide-react';
+import Card from '../ui/Card';
+import { Link } from 'react-router-dom';
+
+// --- VARIANTS ---
+const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { staggerChildren: 0.2 } }
+};
+
+const itemVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 40 } }
+};
 
 const Ecosystem = () => {
     return (
-        <section className="relative py-24 md:py-32 " id="ecosystem">
+        <section className="relative py-24 md:py-32" id="ecosystem">
 
             <div className="container mx-auto px-6 md:px-12 relative z-10">
 
-                {/* Header Copy */}
-                <div className="max-w-4xl mb-16 md:mb-24">
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.6 }}
-                    >
-                        <h2 className="font-mono text-[#EDF246] text-xs tracking-[0.3em] uppercase mb-6">
-                            Autoridad Técnica
-                        </h2>
-                        <h3 className="font-display text-4xl md:text-5xl lg:text-6xl text-white font-bold leading-[1.1] mb-8">
-                            Ingeniería de clase mundial.
-                        </h3>
-                        <p className="font-sans text-xl text-gray-400 leading-relaxed max-w-2xl">
-                            ¿Por qué confiar en nosotros? Porque construimos la tecnología que gestiona operaciones críticas todos los días.
-                        </p>
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.8 }}
+                    className="max-w-4xl mb-16"
+                >
+                    <h2 className="text-[#EDF246] text-xs font-bold tracking-[0.3em] uppercase mb-6">
+                        Productos Propios
+                    </h2>
+                    <h3 className="font-display text-4xl md:text-5xl lg:text-6xl text-white leading-[1.1] mb-8">
+                        No somos solo agencia.<br />
+                        <span className="text-gray-500">Somos ingenieros de software.</span>
+                    </h3>
+                </motion.div>
+
+                <motion.div
+                    className="grid grid-cols-1 lg:grid-cols-2 gap-8"
+                    variants={containerVariants}
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, margin: "-100px" }}
+                >
+
+                    {/* VANTRA RESTO CARD */}
+                    <motion.div variants={itemVariants}>
+                        <Card className="min-h-[500px] p-0 flex flex-col justify-between group overflow-hidden bg-[#0A0A0B]">
+                            {/* Background Image/Gradient Placeholder */}
+                            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#0A0A0B] opacity-90 z-0" />
+
+                            <div className="relative z-10 p-10 md:p-14 flex-1 flex flex-col">
+                                <div className="flex justify-between items-start mb-8">
+                                    <div className="p-3 bg-white/10 rounded-xl backdrop-blur-md text-[#EDF246]">
+                                        <Utensils className="w-8 h-8" />
+                                    </div>
+                                    <span className="bg-black/60 border border-white/10 text-white text-xs px-4 py-2 rounded-full uppercase tracking-widest">
+                                        Gastronomía
+                                    </span>
+                                </div>
+
+                                <div className="mt-auto">
+                                    <h4 className="font-display text-4xl md:text-5xl text-white mb-4">
+                                        Vantra Resto
+                                    </h4>
+                                    <div className="p-6 rounded-2xl bg-black/70 border border-white/10 backdrop-blur-md">
+                                        <p className="text-gray-200 font-medium leading-relaxed">
+                                            El sistema operativo para restaurantes modernos. Reservas, comandas y analytics en un solo lugar.
+                                        </p>
+                                    </div>
+
+                                    <div className="mt-8 flex gap-4 flex-wrap">
+                                        <TechBadge icon={Activity} label="Real-Time" />
+                                        <TechBadge icon={Smartphone} label="App Nativa" />
+                                    </div>
+                                    <Link to="/resto-product" className="mt-8 inline-flex items-center gap-2 text-white font-bold uppercase tracking-widest text-sm hover:text-[#EDF246] transition-colors">
+                                        Ver Producto <ArrowUpRight className="w-4 h-4" />
+                                    </Link>
+                                </div>
+                            </div>
+                        </Card>
                     </motion.div>
-                </div>
 
-                {/* PREMIUM STATIC GRID - 50/50 WITHOUT LAYOUT SHIFT */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 w-full rounded-2xl border border-white/10 overflow-hidden ">
+                    {/* VANTRA MED CARD */}
+                    <motion.div variants={itemVariants}>
+                        <Card className="min-h-[500px] p-0 flex flex-col justify-between group overflow-hidden bg-[#0A0A0B]">
+                            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#0A0A0B] opacity-90 z-0" />
 
-                    {/* PANEL 1: VANTRA RESTO */}
-                    <div className="group relative min-h-[500px] lg:min-h-[600px] border-b lg:border-b-0 lg:border-r border-white/10 p-10 md:p-14 lg:p-20 flex flex-col justify-between overflow-hidden transition-colors duration-500 hover:bg-[#111111]">
-
-                        {/* Interactive Background Glow */}
-                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-[#EDF246]/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
-
-                        {/* Top Section */}
-                        <div className="relative z-10">
-                            <div className="flex justify-between items-start mb-10">
-                                <div className="p-3 bg-white/5 rounded-lg border border-white/10 text-[#EDF246]">
-                                    <Utensils className="w-6 h-6" />
+                            <div className="relative z-10 p-10 md:p-14 flex-1 flex flex-col">
+                                <div className="flex justify-between items-start mb-8">
+                                    <div className="p-3 bg-white/10 rounded-xl backdrop-blur-md text-[#A0E9FF]">
+                                        <HeartPulse className="w-8 h-8" />
+                                    </div>
+                                    <span className="bg-black/60 border border-white/10 text-white text-xs px-4 py-2 rounded-full uppercase tracking-widest">
+                                        HealthTech
+                                    </span>
                                 </div>
-                                <span className="font-mono text-xs text-gray-500 uppercase tracking-widest border border-white/10 px-3 py-1 rounded-full bg-black/50 backdrop-blur-sm">
-                                    SaaS Gastronómico
-                                </span>
-                            </div>
 
-                            <h4 className="font-display text-4xl md:text-5xl text-white font-bold mb-6 group-hover:text-[#EDF246] transition-colors duration-300">
-                                Vantra Resto
-                            </h4>
-                            <p className="text-gray-400 text-lg leading-relaxed max-w-md">
-                                Plataforma integral de gestión. Comandas en tiempo real, control de inventario predictivo y analítica de ventas.
-                            </p>
-                        </div>
+                                <div className="mt-auto">
+                                    <h4 className="font-display text-4xl md:text-5xl text-white mb-4">
+                                        Vantra Med
+                                    </h4>
+                                    <div className="p-6 rounded-2xl bg-black/70 border border-white/10 backdrop-blur-md">
+                                        <p className="text-gray-200 font-medium leading-relaxed">
+                                            Gestión clínica inteligente. Historia clínica electrónica, turnos y telemedicina con seguridad de grado bancario.
+                                        </p>
+                                    </div>
 
-                        {/* Bottom Tech Stack & CTA */}
-                        <div className="relative z-10 mt-12">
-                            <div className="flex flex-wrap gap-3 mb-10">
-                                <TechBadge icon={Activity} label="Real-time DB" />
-                                <TechBadge icon={Smartphone} label="App Nativa" />
-                                <TechBadge icon={Database} label="Offline First" />
-                            </div>
-
-                            <a href="/resto-product" className="inline-flex items-center gap-3 text-white font-display uppercase tracking-widest text-sm group/btn">
-                                <span className="border-b border-white/30 group-hover/btn:border-[#EDF246] group-hover/btn:text-[#EDF246] transition-all">Explorar Tecnología</span>
-                                <ArrowUpRight className="w-4 h-4 text-gray-500 group-hover/btn:text-[#EDF246] group-hover/btn:translate-x-1 group-hover/btn:-translate-y-1 transition-transform" />
-                            </a>
-                        </div>
-                    </div>
-
-                    {/* PANEL 2: VANTRA MED */}
-                    <div className="group relative min-h-[500px] lg:min-h-[600px] p-10 md:p-14 lg:p-20 flex flex-col justify-between overflow-hidden transition-colors duration-500 hover:bg-[#111111]">
-
-                        {/* Interactive Background Glow */}
-                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_var(--tw-gradient-stops))] from-[#A0E9FF]/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
-
-                        {/* Top Section */}
-                        <div className="relative z-10">
-                            <div className="flex justify-between items-start mb-10">
-                                <div className="p-3 bg-white/5 rounded-lg border border-white/10 text-[#A0E9FF]">
-                                    <HeartPulse className="w-6 h-6" />
+                                    <div className="mt-8 flex gap-4 flex-wrap">
+                                        <TechBadge icon={Lock} label="Encriptado" />
+                                        <TechBadge icon={ShieldCheck} label="Seguro" />
+                                    </div>
+                                    <Link to="/med-product" className="mt-8 inline-flex items-center gap-2 text-white font-bold uppercase tracking-widest text-sm hover:text-[#A0E9FF] transition-colors">
+                                        Ver Producto <ArrowUpRight className="w-4 h-4" />
+                                    </Link>
                                 </div>
-                                <span className="font-mono text-xs text-gray-500 uppercase tracking-widest border border-white/10 px-3 py-1 rounded-full bg-black/50 backdrop-blur-sm">
-                                    SaaS Salud
-                                </span>
                             </div>
+                        </Card>
+                    </motion.div>
 
-                            <h4 className="font-display text-4xl md:text-5xl text-white font-bold mb-6 group-hover:text-[#A0E9FF] transition-colors duration-300">
-                                Vantra Med
-                            </h4>
-                            <p className="text-gray-400 text-lg leading-relaxed max-w-md">
-                                Ecosistema digital para clínicas. Historia clínica en la nube, telemedicina encriptada y gestión inteligente de turnos.
-                            </p>
-                        </div>
-
-                        {/* Bottom Tech Stack & CTA */}
-                        <div className="relative z-10 mt-12">
-                            <div className="flex flex-wrap gap-3 mb-10">
-                                <TechBadge icon={Lock} label="End-to-End Encryption" />
-                                <TechBadge icon={ShieldCheck} label="HIPAA Compliant" />
-                                <TechBadge icon={Database} label="Cloud Native" />
-                            </div>
-
-                            <a href="/med-product" className="inline-flex items-center gap-3 text-white font-display uppercase tracking-widest text-sm group/btn">
-                                <span className="border-b border-white/30 group-hover/btn:border-[#A0E9FF] group-hover/btn:text-[#A0E9FF] transition-all">Explorar Tecnología</span>
-                                <ArrowUpRight className="w-4 h-4 text-gray-500 group-hover/btn:text-[#A0E9FF] group-hover/btn:translate-x-1 group-hover/btn:-translate-y-1 transition-transform" />
-                            </a>
-                        </div>
-                    </div>
-
-                </div>
+                </motion.div>
 
             </div>
         </section>
     );
 };
 
-// Subcomponent for tech badges to keep it clean
 const TechBadge = ({ icon: Icon, label }) => (
-    <div className="flex items-center gap-2 px-3 py-1.5 rounded bg-white/5 border border-white/5 text-xs font-mono text-gray-400 group-hover:border-white/10 transition-colors">
-        <Icon className="w-3 h-3 text-gray-500" />
+    <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-xs text-gray-300">
+        <Icon className="w-3 h-3" />
         {label}
     </div>
 );

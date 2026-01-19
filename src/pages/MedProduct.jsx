@@ -43,11 +43,11 @@ export default function MedProduct() {
                                 <div className="space-y-4">
                                     <div className="p-4 rounded-2xl bg-black/20 border border-white/5 flex justify-between items-center">
                                         <div className="text-sm text-zinc-400">Ritmo Cardíaco</div>
-                                        <div className="text-xl font-mono text-cyan-400 font-bold">72 BPM</div>
+                                        <div className="text-xl text-cyan-400 font-bold">72 BPM</div>
                                     </div>
                                     <div className="p-4 rounded-2xl bg-black/20 border border-white/5 flex justify-between items-center">
                                         <div className="text-sm text-zinc-400">Nivel Oxígeno</div>
-                                        <div className="text-xl font-mono text-cyan-400 font-bold">98%</div>
+                                        <div className="text-xl text-cyan-400 font-bold">98%</div>
                                     </div>
 
                                     {/* Graph Placeholder */}

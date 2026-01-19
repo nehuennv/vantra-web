@@ -13,7 +13,7 @@ export default function Footer() {
                     Impulsamos tu negocio con diseño web innovador y campañas digitales que convierten...
                 </p>
 
-                <div className="flex flex-col md:flex-row justify-center items-center gap-4 text-sm text-gray-500 mb-12 font-mono">
+                <div className="flex flex-col md:flex-row justify-center items-center gap-4 text-sm text-gray-500 mb-12">
                     <span>Buenos Aires, Argentina</span>
                     <span className="hidden md:inline text-white/20">|</span>
                     <span>+54 9 11 3883-0925</span>

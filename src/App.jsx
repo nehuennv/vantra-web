@@ -5,6 +5,7 @@ import Home from './pages/Home';
 import RestoProduct from './pages/RestoProduct';
 import MedProduct from './pages/MedProduct';
 import GlobalAuroraBackground from './components/layout/GlobalAuroraBackground';
+import GlobalSpotlight from './components/layout/GlobalSpotlight';
 import SmoothScroll from './components/layout/SmoothScroll';
 
 // Un componente auxiliar para hacer scroll al top al cambiar de ruta
@@ -28,7 +29,10 @@ function App() {
         {/* 2. El Fondo Global "Aurora" (Unified Gradient) */}
         <GlobalAuroraBackground />
 
-        {/* 3. El Contenido (Transparente para dejar ver el fondo) */}
+        {/* 3. Global Spotlight (Mouse Hover Effect) */}
+        <GlobalSpotlight />
+
+        {/* 4. El Contenido (Transparente para dejar ver el fondo) */}
         <div className="min-h-screen font-sans relative text-white selection:bg-[#EDF246] selection:text-black">
 
           <Navbar />

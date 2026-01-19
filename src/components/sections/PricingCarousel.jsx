@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
+import Card from '../ui/Card';
 
 const pricingData = [
     {
@@ -58,23 +59,20 @@ const PricingCarousel = () => {
 
                 {/* Header Section */}
                 <div className="mb-12 text-center">
-                    <h2 className="text-sm font-mono text-[#EDF246] tracking-widest uppercase mb-4">La experiencia diferencial</h2>
-                    <h3 className="text-3xl md:text-5xl font-bold font-display text-white mb-4">
-                        ¿Querés saber cuánto puede costar tu proyecto?
+                    <h2 className="text-sm text-[#EDF246] tracking-widest uppercase mb-4 font-bold">La inversión</h2>
+                    <h3 className="text-3xl md:text-5xl font-display text-white mb-4">
+                        Transparencia Total.
                     </h3>
                     <p className="text-xl text-gray-400">
-                        Te lo decimos ahora, <span className="text-white font-semibold">sin vueltas. Transparencia total.</span>
+                        Precios de referencia para que tomes decisiones informadas.
                     </p>
                 </div>
 
                 {/* CAROUSEL AREA */}
                 <div className="relative max-w-4xl mx-auto">
 
-                    {/* Main Card */}
-                    <div className="bg-white/[0.03] backdrop-blur-md border border-white/10 rounded-3xl p-8 md:p-12 relative overflow-hidden min-h-[450px] flex flex-col justify-center shadow-[0_0_50px_rgba(0,0,0,0.3)]">
-
-                        {/* Background Decor */}
-                        <div className="absolute top-0 right-0 w-80 h-80 bg-[#EDF246]/10 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
+                    {/* Main Card - SOLID for TRUST */}
+                    <Card className="!bg-[#0A0A0B] !backdrop-blur-none border border-white/10 rounded-3xl p-8 md:p-12 relative overflow-hidden min-h-[450px] flex flex-col justify-center shadow-[0_0_50px_rgba(0,0,0,0.5)]">
 
                         <AnimatePresence mode='wait'>
                             <motion.div
@@ -86,18 +84,18 @@ const PricingCarousel = () => {
                                 className="relative z-10"
                             >
                                 {/* Slide Count */}
-                                <div className="text-sm font-mono text-gray-500 mb-6 uppercase tracking-wider">
+                                <div className="text-sm text-gray-500 mb-6 uppercase tracking-wider">
                                     {pricingData[currentIndex].category}
                                 </div>
 
                                 {/* Title */}
-                                <h4 className="text-3xl md:text-4xl font-display font-bold text-white mb-8">
+                                <h4 className="text-3xl md:text-4xl font-display text-white mb-8">
                                     {pricingData[currentIndex].title}
                                 </h4>
 
                                 {/* Pricing Box */}
                                 <div className="inline-block mb-8">
-                                    <span className="text-5xl md:text-6xl font-bold text-[#A0E9FF] tracking-tight">
+                                    <span className="text-5xl md:text-6xl font-bold text-[#A0E9FF] tracking-tight drop-shadow-[0_0_15px_rgba(160,233,255,0.2)]">
                                         {pricingData[currentIndex].priceRange}
                                     </span>
                                 </div>
@@ -105,7 +103,7 @@ const PricingCarousel = () => {
                                 {/* Features List */}
                                 <div className="flex flex-wrap gap-3 mb-8">
                                     {pricingData[currentIndex].features.map((feat, i) => (
-                                        <span key={i} className="px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-sm font-mono text-gray-300">
+                                        <span key={i} className="px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-sm text-gray-300">
                                             {feat}
                                         </span>
                                     ))}
@@ -113,7 +111,7 @@ const PricingCarousel = () => {
 
                                 {/* CTA */}
                                 <button className="w-full md:w-auto px-8 py-4 rounded-full bg-[#EDF246] text-black font-bold hover:bg-[#EDF246]/90 transition-all shadow-[0_0_20px_rgba(237,242,70,0.2)] uppercase text-sm tracking-wide">
-                                    Agendar reunión con este presupuesto
+                                    Agendar con este presupuesto
                                 </button>
 
                             </motion.div>
@@ -129,12 +127,12 @@ const PricingCarousel = () => {
                             </button>
                         </div>
 
-                    </div>
+                    </Card>
 
                     {/* Disclaimer Footer */}
                     <div className="mt-8 text-center max-w-2xl mx-auto">
-                        <p className="text-sm text-gray-500 leading-relaxed font-mono">
-                            <span className="text-[#EDF246] font-bold">Transparencia total:</span> Este es un presupuesto estimado. En la reunión definimos los detalles específicos...
+                        <p className="text-sm text-gray-500 leading-relaxed">
+                            <span className="text-[#EDF246] font-bold">Nota:</span> Los precios son estimados y pueden variar según la complejidad específica de los requerimientos. Se definen con exactitud en la reunión.
                         </p>
                     </div>
 

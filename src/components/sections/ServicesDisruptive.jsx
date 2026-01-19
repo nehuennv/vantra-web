@@ -103,7 +103,7 @@ const ServicesDisruptive = () => {
                                 <div>
                                     <motion.span
                                         layout="position"
-                                        className="inline-block px-3 py-1 rounded-full border border-white/20 bg-black/30 backdrop-blur-sm text-xs text-white mb-2 font-mono uppercase tracking-widest"
+                                        className="inline-block px-3 py-1 rounded-full border border-white/20 bg-black/30 backdrop-blur-sm text-xs text-white mb-2 uppercase tracking-widest"
                                     >
                                         {service.subtitle}
                                     </motion.span>
@@ -134,7 +134,7 @@ const ServicesDisruptive = () => {
                     );
                 })}
             </div>
-        </section>
+        </section >
     );
 };
 

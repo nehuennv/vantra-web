@@ -4,33 +4,33 @@ import { cn } from "../../lib/utils";
 export default function Card({ children, className, hover = true, ...props }) {
     return (
         <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            whileHover={hover ? { y: -5 } : {}}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            whileHover={hover ? { y: -5, boxShadow: "0 20px 40px -10px rgba(0,0,0,0.5)" } : {}}
             className={cn(
                 "relative overflow-hidden rounded-3xl",
-                // Fondo base muy oscuro
-                "bg-vantra-surface",
-                // Borde ultra-fino y sutil
-                "border border-white/[0.08]",
+                // CAPA 2: CONTENCIÓN GLASS
+                "bg-[#0A0A0B]/60", // Negro al 60%
+                "backdrop-blur-xl", // Vidrio ahumado
+                "border border-white/[0.08]", // Borde sutil
                 className
             )}
             {...props}
         >
-            {/* 1. RUIDO / NOISE (El secreto del realismo) */}
+            {/* NOISE TEXTURE (Opacity 0.03) */}
             <div className="absolute inset-0 opacity-[0.03] bg-[url('https://grainy-gradients.vercel.app/noise.svg')] pointer-events-none mix-blend-overlay"></div>
 
-            {/* 2. GLOW AZUL SUAVE (Top Right) */}
-            <div className="absolute -top-20 -right-20 w-64 h-64 bg-vantra-ice/10 blur-[80px] rounded-full pointer-events-none group-hover:bg-vantra-ice/20 transition-all duration-500"></div>
-
-            {/* 3. GLOW AMARILLO (Bottom Left) */}
-            <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-vantra-neon/5 blur-[80px] rounded-full pointer-events-none group-hover:bg-vantra-neon/10 transition-all duration-500"></div>
-
-            <div className="relative z-10 p-8">
+            {/* CONTENIDO */}
+            <div className="relative z-10 h-full">
                 {children}
             </div>
+
+            {/* HOVER GLOW EFFECT (Subtle) */}
+            {hover && (
+                <div className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-700 pointer-events-none bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.03),transparent_70%)]" />
+            )}
         </motion.div>
     );
 }
