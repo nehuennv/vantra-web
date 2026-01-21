@@ -16,9 +16,12 @@ const GlobalAuroraBackground = () => {
     // Slow, seamless rotation linked to scroll (Increased to 45deg for more dynamism, starts at -15deg)
     const rotate = useTransform(smoothProgress, [0, 1], ['-15deg', '45deg']);
 
+    // Zoom linked to scroll (To prevent edges from showing during rotation)
+    const scale = useTransform(smoothProgress, [0, 1], [1, 1.2]);
+
     // Passive breathing animation
     const breatheAnimation = {
-        scale: [1, 1.05, 1], // Reduced breathing range for stability
+        scale: [1, 1.05, 1], // Micro-breathing
         opacity: [0.6, 0.7, 0.6],
         transition: {
             duration: 18,
@@ -35,20 +38,26 @@ const GlobalAuroraBackground = () => {
             <div className="absolute inset-0 bg-[#050507]" />
 
             {/* BAKED ASSET LAYER */}
-            {/* Reduced from 150vmax to 110vmax to "zoom out" and show more air */}
+            {/* Increased to 135vmax + Scroll Zoom to ensure no corners are visible during rotation */}
             <motion.div
                 style={{
                     rotate,
+                    scale, // Dynamic Zoom on Scroll
                     willChange: 'transform',
                 }}
-                animate={breatheAnimation}
-                className="relative w-[110vmax] h-[110vmax] shrink-0 transform-gpu"
+                className="relative w-[135vmax] h-[135vmax] shrink-0 transform-gpu"
             >
-                <img
-                    src={BackgroundImage}
-                    alt=""
-                    className="w-full h-full object-cover opacity-70"
-                />
+                {/* Breathing Animation Wrapper */}
+                <motion.div
+                    animate={breatheAnimation}
+                    className="w-full h-full"
+                >
+                    <img
+                        src={BackgroundImage}
+                        alt=""
+                        className="w-full h-full object-cover opacity-70"
+                    />
+                </motion.div>
             </motion.div>
 
             {/* NOISE OVERLAY */}

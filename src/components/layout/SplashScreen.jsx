@@ -32,9 +32,9 @@ const SplashScreen = ({ onComplete }) => {
             className="fixed inset-0 z-[99999] flex flex-col items-center justify-center bg-[#050507] overflow-hidden"
             initial={{ opacity: 1 }}
             exit={{ 
-                y: "-100%", // Efecto "Telón"
                 opacity: 0,
-                transition: { duration: 0.8, ease: [0.76, 0, 0.24, 1] } 
+                filter: "blur(10px)",
+                transition: { duration: 0.8, ease: "easeInOut" } 
             }}
         >
             {/* --- FONDO: THE LIVING CORE --- */}

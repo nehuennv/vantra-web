@@ -174,13 +174,13 @@ const Navbar = () => {
         <div
           className={`
               relative flex flex-col
-              overflow-hidden
+              overflow-visible
               rounded-2xl 
               transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]
-              will-change-transform transform-gpu
+              will-change-transform transform-gpu border
               ${scrolled
               // OPTIMIZATION: Reduced blur 3xl -> md. Increased opacity 60 -> 85.
-              ? 'bg-[#0A0A12]/80 backdrop-blur-md border border-white/[0.08] shadow-[0_24px_50px_-12px_rgba(0,0,0,0.7)] ring-1 ring-white/[0.05]'
+              ? 'bg-[#0A0A12]/80 backdrop-blur-md border-white/[0.08] shadow-[0_24px_50px_-12px_rgba(0,0,0,0.7)] ring-1 ring-white/[0.05]'
               : 'bg-transparent border-transparent shadow-none backdrop-blur-none ring-0'
             }
           `}
@@ -194,8 +194,14 @@ const Navbar = () => {
             <div className="flex items-center gap-6 px-6 py-3">
 
               {/* 1. LOGO */}
-              <Link to="/" className="shrink-0 block hover:opacity-80 transition-opacity">
-                <img src={LogoCompleto} alt="Vantra" className="h-9 w-auto" />
+              <Link to="/" className="shrink-0 block">
+                <motion.img
+                  src={LogoCompleto}
+                  alt="Vantra"
+                  className="h-9 w-auto"
+                  whileHover={{ scale: 1.05, filter: "brightness(1.2)" }}
+                  transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                />
               </Link>
 
               {/* SEPARATOR */}
@@ -278,20 +284,21 @@ const Navbar = () => {
               <div className="w-px h-8 bg-white/[0.08]" />
 
               {/* 3. CTA BUTTON */}
-              <Link
-                to="/configurar"
-                className="
-                      group relative flex items-center gap-3 
-                      px-7 py-3 rounded-xl 
-                      bg-[#EDF246] text-black 
-                      font-bold text-sm tracking-wide
-                      overflow-hidden transition-transform active:scale-95 hover:shadow-[0_0_30px_rgba(255,255,255,0.3)]
-                    "
-              >
-                <span className="relative z-10">Empezar Proyecto</span>
-                <ArrowRight size={16} className="relative z-10 transition-transform duration-300 group-hover:translate-x-1" />
-
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent skew-x-12 translate-x-[-150%] group-hover:translate-x-[150%] transition-transform duration-700 ease-in-out" />
+              <Link to="/configurar">
+                <motion.button
+                  whileHover={{ scale: 1.05, backgroundColor: "#F5F876", boxShadow: "0 0 25px rgba(237, 242, 70, 0.5)" }}
+                  whileTap={{ scale: 0.95 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                  className="
+                    flex items-center gap-2 
+                    px-6 py-3 rounded-xl 
+                    bg-[#EDF246] text-black 
+                    font-bold text-sm tracking-wide
+                  "
+                >
+                  Empezar
+                  <ArrowRight size={16} className="text-black/70" />
+                </motion.button>
               </Link>
 
             </div>
@@ -301,10 +308,17 @@ const Navbar = () => {
               {hoveredTab === 'Ecosistema' && (
                 <motion.div
                   initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: "auto", opacity: 1 }}
+                  animate={{
+                    height: "auto",
+                    opacity: 1,
+                    borderRadius: scrolled ? "0px 0px 16px 16px" : "16px"
+                  }}
                   exit={{ height: 0, opacity: 0 }}
-                  transition={{ type: "spring", stiffness: 100, damping: 20 }}
-                  className="w-full border-t border-white/[0.05] bg-black/20 overflow-hidden"
+                  transition={{ type: "spring", stiffness: 200, damping: 20 }}
+                  className={`
+                    w-full bg-black/20 overflow-hidden transition-colors duration-300
+                    ${scrolled ? 'border-t border-white/[0.05]' : 'border border-white/10'}
+                  `}
                 >
                   <div
                     className="flex items-center justify-center gap-2 p-3"

@@ -7,9 +7,9 @@ const GlobalCursor = () => {
     const mouseX = useMotionValue(-100);
     const mouseY = useMotionValue(-100);
 
-    // 2. Física de resorte para el Aura (The Ghost)
-    // stiffness bajo y damping alto para ese efecto "underwater" o "ghost"
-    const springConfig = { damping: 20, stiffness: 150, mass: 0.5 };
+    // 2. Física de resorte para el Aura (The Ghost) -> AHORA MÁS RÍGIDO
+    // stiffness alto y mass bajo para que siga rápido y sin "shadow lag"
+    const springConfig = { damping: 35, stiffness: 400, mass: 0.2 };
     const auraX = useSpring(mouseX, springConfig);
     const auraY = useSpring(mouseY, springConfig);
 
@@ -120,9 +120,9 @@ const GlobalCursor = () => {
                 }}
             />
 
-            {/* 2. AURA (The Ghost) - Con Spring Physics */}
+            {/* 2. AURA (The Ring) - Con Spring Physics Tight */}
             <motion.div
-                className="absolute rounded-full bg-[#A0E9FF]/10" // Menos opacidad y adiós backdrop-blur (Lag Killer)
+                className="absolute rounded-full border border-[#EDF246]/50" // Borde fino en lugar de fill
                 style={{
                     width: 32,
                     height: 32,
@@ -131,7 +131,7 @@ const GlobalCursor = () => {
                     scale: cursorScaleSpring,
                     translateX: '-50%',
                     translateY: '-50%',
-                    filter: "blur(5px)", // Menos dispersión, más focus
+                    // QUITAMOS EL BLUR
                     willChange: "transform", // Optimización extrema
                 }}
             />
