@@ -4,21 +4,30 @@ import { Menu, X, ArrowRight, ChevronDown, Utensils, HeartPulse, Layers, Sparkle
 import { motion, AnimatePresence } from 'framer-motion';
 
 import LogoCompleto from '../../assets/logo/logo-completo.svg';
-import LogoSimple from '../../assets/logo/logo-simple.svg';
 
 const Navbar = () => {
-  // Removed 'scrolled' state dependency for rendering. 
-  // We keep the state just in case we need conditional styling later, but basic rendering is permanent.
+  // Removed 'scrolled' state dependency for rendering? No, we need it.
   const [scrolled, setScrolled] = useState(false);
 
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [hoveredTab, setHoveredTab] = useState(null);
   const [hoveredSubItem, setHoveredSubItem] = useState(null);
   const location = useLocation();
 
-  // Scroll detection (Optional now, but kept for potential future use)
+  // Mobile Menu State
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Lock Body Scroll when Mobile Menu is open
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 10);
+    if (mobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+  }, [mobileMenuOpen]);
+
+  // Scroll detection
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -39,11 +48,120 @@ const Navbar = () => {
 
   return (
     <>
+      {/* --- MOBILE NAVBAR (Visible < md) --- */}
+      <motion.div
+        className="fixed top-6 left-0 right-0 z-[9999] flex md:hidden justify-between items-center px-6 pointer-events-none"
+        initial={{ y: -100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+      >
+        {/* LOGO */}
+        <Link
+          to="/"
+          className="pointer-events-auto px-5 py-2.5 rounded-full bg-[#0A0A12]/50 backdrop-blur-xl border border-white/[0.08] shadow-lg active:scale-95 transition-transform flex items-center"
+          onClick={() => setMobileMenuOpen(false)}
+        >
+          <img src={LogoCompleto} alt="Vantra" className="h-7 w-auto drop-shadow-lg" />
+        </Link>
+
+        {/* HAMBURGER BUTTON */}
+        <button
+          onClick={() => setMobileMenuOpen(true)}
+          className="pointer-events-auto p-3 rounded-full bg-[#0A0A12]/50 backdrop-blur-xl border border-white/[0.08] shadow-lg text-white active:scale-95 transition-transform"
+        >
+          <Menu size={20} />
+        </button>
+      </motion.div>
+
+      {/* --- MOBILE MENU OVERLAY --- */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            className="fixed inset-0 z-[10000] bg-black/60 backdrop-blur-3xl flex flex-col"
+            initial={{ opacity: 0, clipPath: "circle(0% at 100% 0%)" }}
+            animate={{ opacity: 1, clipPath: "circle(150% at 100% 0%)" }}
+            exit={{ opacity: 0, clipPath: "circle(0% at 100% 0%)" }}
+            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          >
+            {/* Background Gradients */}
+            <div className="absolute top-0 right-0 w-[300px] h-[300px] bg-[#EDF246]/10 blur-[100px] rounded-full pointer-events-none" />
+            <div className="absolute bottom-0 left-0 w-[200px] h-[200px] bg-[#6666D9]/10 blur-[80px] rounded-full pointer-events-none" />
+
+            {/* HEADER */}
+            <div className="flex justify-between items-center px-6 pt-6 pb-4">
+              <Link to="/" onClick={() => setMobileMenuOpen(false)}>
+                <img src={LogoCompleto} alt="Vantra" className="h-8 w-auto" />
+              </Link>
+              <button
+                onClick={() => setMobileMenuOpen(false)}
+                className="p-3 rounded-full bg-white/5 border border-white/10 text-white active:scale-95 transition-transform"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            {/* SCROLLABLE CONTENT */}
+            <div className="flex-1 overflow-y-auto px-6 py-8 flex flex-col gap-8">
+              <nav className="flex flex-col gap-2">
+                {navLinks.map((link, index) => (
+                  <div key={link.name}>
+                    {link.type === 'dropdown' ? (
+                      <div className="flex flex-col gap-2">
+                        <div className="text-gray-400 text-xs font-bold tracking-widest uppercase mb-2 pl-2">
+                          {link.name}
+                        </div>
+                        {link.items.map((subItem) => (
+                          <Link
+                            key={subItem.name}
+                            to={subItem.path}
+                            onClick={() => setMobileMenuOpen(false)}
+                            className="group flex items-center gap-4 p-4 rounded-2xl bg-white/[0.03] border border-white/[0.05] active:bg-white/[0.08] transition-colors"
+                          >
+                            <div className="p-2.5 rounded-full bg-[#EDF246]/10 text-[#EDF246] group-active:scale-110 transition-transform">
+                              <subItem.icon size={20} />
+                            </div>
+                            <div className="flex-1">
+                              <div className="font-bold text-lg text-white">{subItem.name}</div>
+                              <div className="text-sm text-gray-400">{subItem.desc}</div>
+                            </div>
+                            <ArrowRight size={16} className="text-white/20 -rotate-45" />
+                          </Link>
+                        ))}
+                      </div>
+                    ) : (
+                      <Link
+                        to={link.path}
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="flex items-center justify-between p-4 rounded-2xl text-2xl font-bold text-white hover:text-[#EDF246] transition-colors"
+                      >
+                        <span className="flex items-center gap-3">
+                          {/* <link.icon size={24} className="text-gray-500" /> */}
+                          {link.name}
+                        </span>
+                        <ArrowRight size={20} className="text-white/20 -rotate-45" />
+                      </Link>
+                    )}
+                    {index !== navLinks.length - 1 && <div className="h-px bg-white/[0.05] my-2" />}
+                  </div>
+                ))}
+              </nav>
+            </div>
+
+            {/* FOOTER CTA */}
+            <div className="p-6 border-t border-white/[0.05]">
+              <Link
+                to="/configurar"
+                onClick={() => setMobileMenuOpen(false)}
+                className="w-full flex items-center justify-center gap-2 py-4 rounded-xl bg-[#EDF246] text-black font-bold text-lg active:scale-[0.98] transition-transform"
+              >
+                Empezar Proyecto
+                <ArrowRight size={20} />
+              </Link>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
       {/* --- DESKTOP MEGA-ISLAND --- */}
-      {/* 
-          STATIC RENDER: No AnimatePresence, no Scroll Trigger.
-          Always visible, fixed position.
-      */}
       <motion.div
         className="fixed top-6 left-1/2 hidden md:flex flex-col w-full max-w-fit"
         style={{ zIndex: 9999, transform: 'translateX(-50%)' }} // Force Z and Center
@@ -59,8 +177,10 @@ const Navbar = () => {
               overflow-hidden
               rounded-2xl 
               transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]
+              will-change-transform transform-gpu
               ${scrolled
-              ? 'bg-[#050505]/60 backdrop-blur-3xl border border-white/[0.08] shadow-[0_24px_50px_-12px_rgba(0,0,0,0.7)] ring-1 ring-white/[0.05]'
+              // OPTIMIZATION: Reduced blur 3xl -> md. Increased opacity 60 -> 85.
+              ? 'bg-[#0A0A12]/80 backdrop-blur-md border border-white/[0.08] shadow-[0_24px_50px_-12px_rgba(0,0,0,0.7)] ring-1 ring-white/[0.05]'
               : 'bg-transparent border-transparent shadow-none backdrop-blur-none ring-0'
             }
           `}
@@ -133,6 +253,7 @@ const Navbar = () => {
                           {isActive && (
                             <motion.div
                               layoutId="nav-active"
+                              // OPTIMIZATION: Simple border/bg, cheap to render
                               className="absolute inset-0 bg-white/[0.06] border border-white/[0.05] rounded-xl -z-10"
                               transition={{ type: "spring", stiffness: 300, damping: 30 }}
                             />
@@ -199,42 +320,32 @@ const Navbar = () => {
                           onMouseEnter={() => setHoveredSubItem(item.name)}
                           className="relative flex-1 flex items-center gap-4 p-4 rounded-xl transition-colors min-w-[240px] group/item"
                         >
-                          {/* FLUID HOVER BACKGROUND */}
+                          {/* Hover Background - FLUID */}
                           {isHovered && (
                             <motion.div
                               layoutId="submenu-hover-bg"
-                              className="absolute inset-0 bg-white/[0.08] rounded-xl shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05)]"
+                              className="absolute inset-0 bg-white/[0.05] rounded-xl -z-10"
                               transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                             />
                           )}
 
-                          {/* ICON CONTAINER */}
+                          {/* Icon Circle */}
                           <div className={`
-                                      relative z-10 p-3 rounded-xl 
-                                      bg-black/60 border border-white/[0.1] 
-                                      group-hover/item:border-[#EDF246]/50 group-hover/item:text-[#EDF246] 
-                                      text-gray-400 transition-all duration-300 group-hover/item:scale-110 group-hover/item:shadow-[0_0_15px_-3px_rgba(237,242,70,0.3)]
-                                    `}>
-                            <item.icon size={22} strokeWidth={1.5} />
+                                p-3 rounded-full border transition-all duration-300
+                                ${isHovered ? 'bg-[#EDF246] border-[#EDF246] text-black scale-110 shadow-[0_0_15px_rgba(237,242,70,0.3)]' : 'bg-white/5 border-white/10 text-white'}
+                              `}>
+                            <item.icon size={20} />
                           </div>
 
-                          {/* TEXT CONTENT */}
-                          <div className="relative z-10 flex flex-col items-start translate-x-0 group-hover/item:translate-x-1 transition-transform duration-300">
-                            <span className="text-sm font-bold text-white group-hover/item:text-[#EDF246] transition-colors duration-300">
+                          <div>
+                            <div className={`font-bold text-sm transition-transform duration-300 ${isHovered ? 'translate-x-1' : ''}`}>
                               {item.name}
-                            </span>
-                            <span className="text-xs text-gray-400 font-medium group-hover/item:text-gray-200 transition-colors duration-300">
-                              {item.desc}
-                            </span>
+                            </div>
+                            <div className="text-xs text-gray-400 mt-0.5">{item.desc}</div>
                           </div>
 
-                          {/* ARROW INDICATOR */}
-                          <motion.div
-                            className="absolute right-4 text-[#EDF246] opacity-0 group-hover/item:opacity-100 transition-opacity duration-300"
-                            initial={false}
-                          >
-                            <ArrowRight size={14} />
-                          </motion.div>
+                          {/* Arrow Hint */}
+                          <ArrowRight size={14} className={`ml-auto text-white/50 transition-all duration-300 ${isHovered ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-2'}`} />
                         </Link>
                       );
                     })}
@@ -242,94 +353,10 @@ const Navbar = () => {
                 </motion.div>
               )}
             </AnimatePresence>
-          </div>
 
+          </div>
         </div>
       </motion.div>
-
-
-      {/* --- MOBILE NAV --- */}
-      {/* 
-          Keep mobile nav always visible (standard pattern) instead of scroll trigger.
-          The user said "sin nada" about animations.
-      */}
-      <div className="md:hidden fixed top-0 left-0 right-0 z-[9999] p-4" style={{ zIndex: 9999 }}>
-        <div
-          className="flex items-center justify-between px-5 py-3 rounded-2xl bg-[#0A0A0B]/80 backdrop-blur-xl border border-white/10 shadow-lg"
-        >
-          <Link to="/">
-            <img src={LogoSimple} alt="Logo" className="h-8 w-auto" />
-          </Link>
-          <button
-            onClick={() => setMobileMenuOpen(true)}
-            className="p-2 text-white bg-white/10 rounded-full active:scale-90 transition-transform"
-          >
-            <Menu size={24} />
-          </button>
-        </div>
-      </div>
-
-      {/* MOBILE FULL SCREEN OVERLAY */}
-      <AnimatePresence>
-        {mobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, backdropFilter: "blur(0px)" }}
-            animate={{ opacity: 1, backdropFilter: "blur(20px)" }}
-            exit={{ opacity: 0, backdropFilter: "blur(0px)" }}
-            className="fixed inset-0 z-[60] bg-black/90 flex flex-col justify-center items-center p-6"
-            style={{ zIndex: 99999 }} // Maximum z-index
-          >
-            <button
-              onClick={() => setMobileMenuOpen(false)}
-              className="absolute top-6 right-6 p-3 bg-white/10 rounded-full text-white hover:bg-white/20 transition-colors"
-            >
-              <X size={24} />
-            </button>
-
-            <nav className="flex flex-col items-center gap-8 w-full max-w-sm">
-              {navLinks.map((link) => (
-                <div key={link.name} className="text-center w-full">
-                  {link.type === 'dropdown' ? (
-                    <div className="space-y-4">
-                      <div className="text-gray-500 text-xs uppercase tracking-[0.2em] font-bold pb-2 border-b border-white/10 mb-4">
-                        {link.name}
-                      </div>
-                      {link.items.map(item => (
-                        <Link
-                          key={item.name}
-                          to={item.path}
-                          onClick={() => setMobileMenuOpen(false)}
-                          className="block py-2 text-2xl font-display text-white hover:text-[#EDF246] transition-colors"
-                        >
-                          {item.name}
-                        </Link>
-                      ))}
-                    </div>
-                  ) : (
-                    <Link
-                      to={link.path}
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="text-4xl font-display font-bold text-white hover:text-[#EDF246] transition-colors"
-                    >
-                      {link.name}
-                    </Link>
-                  )}
-                </div>
-              ))}
-
-              <div className="w-full h-px bg-white/10 my-4" />
-
-              <Link
-                to="/configurar"
-                onClick={() => setMobileMenuOpen(false)}
-                className="w-full py-4 bg-[#EDF246] text-black text-center font-bold text-lg rounded-xl uppercase tracking-widest shadow-[0_0_30px_rgba(237,242,70,0.3)]"
-              >
-                Iniciar Proyecto
-              </Link>
-            </nav>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </>
   );
 };

@@ -12,7 +12,7 @@ const Home = () => {
   return (
     <>
       <Hero />
-      <Services />
+      <Services/>
       <Ecosystem />
       <Differential />
       <PricingCarousel />

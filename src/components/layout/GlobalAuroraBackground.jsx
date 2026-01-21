@@ -1,11 +1,11 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
+import BackgroundImage from '../../assets/complete-background.png';
 
 const GlobalAuroraBackground = () => {
-    // Scroll handling for subtle "breathing" and movement
     const { scrollYProgress } = useScroll();
 
-    // Smooth physics for organic feel (High damping = heavy/slow)
+    // Soft physics for the rotation
     const smoothProgress = useSpring(scrollYProgress, {
         mass: 0.5,
         stiffness: 50,
@@ -13,59 +13,46 @@ const GlobalAuroraBackground = () => {
         restDelta: 0.001
     });
 
-    // Slow rotation linked to scroll, but very small range to avoid dizzy effect
-    const rotate = useTransform(smoothProgress, [0, 1], ['0deg', '90deg']);
+    // Slow, seamless rotation linked to scroll (Increased to 45deg for more dynamism, starts at -15deg)
+    const rotate = useTransform(smoothProgress, [0, 1], ['-15deg', '45deg']);
 
-    // Subtle parallax
-    const y = useTransform(smoothProgress, [0, 1], ['0%', '20%']);
-
-    // Opacity pulse (Breathing effect) - Independent of scroll
-    const breathe = {
-        opacity: [0.6, 0.8, 0.6],
-        scale: [1, 1.15, 1],
+    // Passive breathing animation
+    const breatheAnimation = {
+        scale: [1, 1.05, 1], // Reduced breathing range for stability
+        opacity: [0.6, 0.7, 0.6],
         transition: {
-            duration: 15, // A bit faster (was 20)
+            duration: 18,
             repeat: Infinity,
             ease: "easeInOut"
         }
     };
 
     return (
-        <div className="fixed inset-0 z-[-1] overflow-hidden bg-[#050507] pointer-events-none">
+        // OPTIMIZATION FIXED: Use Flexbox for centering to avoid transform conflicts
+        <div className="fixed inset-0 z-[-1] overflow-hidden bg-[#050507] pointer-events-none flex items-center justify-center">
 
-            {/* ATMOSPHERE LAYER (Static Dark Base) */}
+            {/* DARK BASE ATMOSPHERE */}
             <div className="absolute inset-0 bg-[#050507]" />
 
-            {/* AURORA LAYER */}
+            {/* BAKED ASSET LAYER */}
+            {/* Reduced from 150vmax to 110vmax to "zoom out" and show more air */}
             <motion.div
-                style={{ rotate, y }}
-                animate={breathe}
-                className="absolute top-[-50%] left-[-50%] w-[200vw] h-[200vh]"
+                style={{
+                    rotate,
+                    willChange: 'transform',
+                }}
+                animate={breatheAnimation}
+                className="relative w-[110vmax] h-[110vmax] shrink-0 transform-gpu"
             >
-                <div
-                    className="w-full h-full blur-[150px] opacity-80"
-                    style={{
-                        background: `conic-gradient(
-                            from 0deg at 50% 50%,
-                            #050507 0deg,
-                            #050507 100deg,
-                            #1E3A8A 160deg,
-                            #050507 200deg,
-                            #A0E9FF 240deg,
-                            #050507 280deg,
-                            #EDF246 320deg,
-                            #050507 360deg
-                        )`
-                    }}
+                <img
+                    src={BackgroundImage}
+                    alt=""
+                    className="w-full h-full object-cover opacity-70"
                 />
             </motion.div>
 
-            {/* LIGHT SPOTS (Ambient Light) */}
-            <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-[#A0E9FF]/5 blur-[150px] rounded-full pointer-events-none mix-blend-screen" />
-            <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-[#EDF246]/5 blur-[150px] rounded-full pointer-events-none mix-blend-screen" />
-
-            {/* NOISE LAYER (Texture) */}
-            <div className="absolute inset-0 w-full h-full opacity-[0.05] bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-overlay" />
+            {/* NOISE OVERLAY */}
+            <div className="absolute inset-0 w-full h-full opacity-[0.04] bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-overlay pointer-events-none" />
 
         </div>
     );

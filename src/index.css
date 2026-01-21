@@ -6,6 +6,7 @@
 @tailwind utilities;
 
 @layer base {
+
   body {
     @apply bg-vantra-bg text-white font-sans antialiased selection:bg-vantra-neon selection:text-vantra-bg;
   }
@@ -50,5 +51,19 @@
 
   ::-webkit-scrollbar-thumb:hover {
     @apply bg-white/40;
+  }
+}
+
+/* Ocultar cursor nativo en desktop para usar el GlobalCursor */
+@media (pointer: fine) {
+
+  body,
+  a,
+  button,
+  input,
+  textarea,
+  select,
+  .interactive {
+    cursor: none !important;
   }
 }

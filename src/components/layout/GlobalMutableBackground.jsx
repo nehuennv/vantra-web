@@ -47,7 +47,8 @@ const GlobalMutableBackground = () => {
                     left: '50%',
                     x: '-50%',
                     opacity: neonOpacity,
-                    scale: neonScale
+                    scale: neonScale,
+                    willChange: "transform"
                 }}
                 className="absolute w-[80vh] h-[80vh] rounded-full bg-[#EDF246] blur-[150px] opacity-60"
             />
@@ -59,7 +60,8 @@ const GlobalMutableBackground = () => {
                     right: '0%',
                     x: blueX,
                     opacity: blueOpacity,
-                    scale: blueScale
+                    scale: blueScale,
+                    willChange: "transform"
                 }}
                 className="absolute w-[70vh] h-[70vh] rounded-full bg-[#A0E9FF] blur-[180px] opacity-0"
             />
@@ -70,7 +72,8 @@ const GlobalMutableBackground = () => {
                     bottom: '-20%',
                     left: '20%',
                     y: deepY, // Moves up slightly at the end
-                    opacity: deepOpacity
+                    opacity: deepOpacity,
+                    willChange: "transform"
                 }}
                 className="absolute w-[100vh] h-[80vh] rounded-full bg-[#1E3A8A] blur-[200px]"
             />

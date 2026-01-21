@@ -9,34 +9,37 @@ import {
 import { Link } from 'react-router-dom';
 import {
   motion,
-  AnimatePresence, // Asegurarnos de tener esto
+  AnimatePresence,
   useMotionTemplate,
   useMotionValue,
 } from 'framer-motion';
 
 // --- COMPONENTE: STATUS BAR ITEM (Limpio y Premium) ---
-const StatusBarItem = ({ icon: Icon, value, label, color, active }) => {
+const StatusBarItem = ({ icon: Icon, value, label, color, active, className = "" }) => {
   return (
-    <div className="relative flex items-center gap-5 px-8 py-5 cursor-default group/item">
-      {/* Icono minimalista */}
-      <div className={`text-gray-400 transition-colors duration-200 ${active ? color : `group-hover/item:${color}`}`}>
+    <div className={`relative flex items-center gap-5 px-6 py-4 md:px-8 md:py-5 group/item ${className}`}>
+      {/* Icono minimalista - Se activa con Neon */}
+      <div className={`transition-colors duration-500 ease-out ${active ? 'text-[#EDF246]' : 'text-gray-400 group-hover/item:text-[#EDF246]'}`}>
         <Icon size={20} strokeWidth={1.5} />
       </div>
 
       <div className="flex flex-col">
+        {/* Value (Numero) - SIEMPRE BLANCO */}
         <div className="text-2xl font-display font-bold leading-none mb-1 text-white">
           {value}
         </div>
-        <div className={`text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500 transition-colors duration-200 ${active ? 'text-[#EDF246]' : 'group-hover/item:text-[#EDF246]'}`}>
+
+        {/* Label (Texto) - Se activa con Neon */}
+        <div className={`text-[10px] font-bold uppercase tracking-[0.2em] transition-colors duration-500 ease-out ${active ? 'text-[#EDF246]' : 'text-gray-500 group-hover/item:text-[#EDF246]'}`}>
           {label}
         </div>
       </div>
 
-      {/* Separador Vertical Sutil */}
-      <div className="absolute right-0 top-1/2 -translate-y-1/2 w-px h-10 bg-white/10 group-last:hidden" />
+      {/* Separador Vertical Sutil (SOLO DESKTOP) */}
+      <div className="hidden md:block absolute right-0 top-1/2 -translate-y-1/2 w-px h-10 bg-white/10 group-last:hidden" />
 
-      {/* Brillo de fondo muy sutil - Solo al hover del item o si está activo */}
-      <div className={`absolute inset-0 bg-white/[0.02] transition-opacity duration-200 ${active ? 'opacity-100' : 'opacity-0 group-hover/item:opacity-100'}`} />
+      {/* Brillo de fondo muy sutil */}
+      <div className={`absolute inset-0 bg-white/[0.02] transition-opacity duration-500 ease-out ${active ? 'opacity-100' : 'opacity-0 group-hover/item:opacity-100'}`} />
     </div>
   );
 };
@@ -176,30 +179,37 @@ const Hero = () => {
         transition={{ duration: 1, delay: 0.8, type: "spring", stiffness: 30 }}
         className="absolute bottom-12 left-0 w-full flex justify-center px-6 z-20"
       >
-        <div className="flex flex-wrap justify-center items-center bg-white/[0.03] backdrop-blur-3xl border border-white/10 ring-1 ring-white/5 rounded-2xl shadow-2xl overflow-hidden">
+        {/* CONTAINER OPTIMIZATION: 2/1 Grid on mobile, Separate Cards on Desktop */}
+        <div className="grid grid-cols-2 gap-3 w-full max-w-[340px] md:flex md:flex-row md:items-center md:justify-center md:gap-5 md:w-auto md:max-w-none md:bg-transparent md:border-0 md:shadow-none">
 
+          {/* ITEM 1: TRANSPARENCIA (Vertical Mobile / Horizontal Desktop) */}
           <StatusBarItem
             icon={ShieldCheck}
             value="100%"
             label="Transparencia"
-            color="text-emerald-400"
+            color="text-[#EDF246]"
             active={isMultiplicaActive}
+            className="col-span-1 bg-white/[0.03] backdrop-blur-md border border-white/10 rounded-xl w-full flex-col justify-center text-center p-3 md:bg-white/[0.03] md:backdrop-blur-md md:border md:border-white/10 md:rounded-2xl md:w-auto md:flex-row md:text-left md:px-8 md:py-5 md:shadow-lg"
           />
 
+          {/* ITEM 2: ALIANZAS (Vertical Mobile / Horizontal Desktop) */}
           <StatusBarItem
             icon={Globe}
             value="15+"
-            label="Alianzas Activas"
-            color="text-blue-400"
+            label="Alianzas"
+            color="text-[#EDF246]"
             active={isMultiplicaActive}
+            className="col-span-1 bg-white/[0.03] backdrop-blur-md border border-white/10 rounded-xl w-full flex-col justify-center text-center p-3 md:bg-white/[0.03] md:backdrop-blur-md md:border md:border-white/10 md:rounded-2xl md:w-auto md:flex-row md:text-left md:px-8 md:py-5 md:shadow-lg"
           />
 
+          {/* ITEM 3: ROAS (HORIZONTAL Mobile / Horizontal Desktop) */}
           <StatusBarItem
             icon={Zap}
             value="8x"
             label="ROAS Promedio"
             color="text-[#EDF246]"
             active={isMultiplicaActive}
+            className="col-span-2 md:col-span-1 bg-white/[0.03] backdrop-blur-md border border-white/10 rounded-xl w-full flex-row items-center justify-center px-6 py-4 md:bg-white/[0.03] md:backdrop-blur-md md:border md:border-white/10 md:rounded-2xl md:w-auto md:flex-row md:justify-start md:text-left md:px-8 md:py-5 md:shadow-lg gap-4"
           />
 
         </div>
