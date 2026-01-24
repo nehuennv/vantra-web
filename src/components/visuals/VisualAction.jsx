@@ -76,11 +76,11 @@ const VisualAction = () => {
                 <div className="flex items-center gap-3">
                     <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
                     <div>
-                        <h3 className="text-xs font-semibold text-white tracking-wide">Agenda en Vivo</h3>
-                        <span className="text-[10px] text-zinc-500 block">Dr. Alejandro</span>
+                        <h3 className="text-base font-normal font-righteous text-white tracking-wide uppercase">Agenda en Vivo</h3>
+                        <span className="text-xs text-zinc-500 block">Dr. Alejandro</span>
                     </div>
                 </div>
-                <div className="px-2 py-1 rounded bg-white/5 border border-white/5 text-[10px] text-zinc-400 font-mono">
+                <div className="px-2 py-1 rounded bg-white/5 border border-white/5 text-xs text-zinc-400 font-mono">
                     HOY, 24 SEP
                 </div>
             </div>
@@ -89,7 +89,7 @@ const VisualAction = () => {
             <div className="flex-1 p-4 overflow-hidden relative">
 
                 {/* Línea de Tiempo Decorativa (Vertical) */}
-                <div className="absolute top-0 bottom-0 left-[3.2rem] w-[1px] bg-white/5 z-0" />
+                <div className="absolute top-0 bottom-0 left-[3.5rem] w-[1px] bg-white/5 z-0" />
 
                 {/* Línea de "Hora Actual" (Animada) */}
                 <motion.div
@@ -98,7 +98,7 @@ const VisualAction = () => {
                     animate={{ top: "38%" }}
                     transition={{ duration: 8, ease: "linear", repeat: Infinity, repeatType: "reverse" }}
                 >
-                    <div className="w-[3.2rem] text-[9px] text-red-400 font-bold text-right pr-2">09:42</div>
+                    <div className="w-[3.5rem] text-[10px] text-red-400 font-bold text-right pr-2">09:42</div>
                     <div className="w-2 h-2 rounded-full bg-red-500 -ml-1 shadow-[0_0_8px_rgba(239,68,68,0.6)]" />
                     <div className="flex-1 h-[1px] bg-red-500/50" />
                 </motion.div>
@@ -136,12 +136,12 @@ const VisualAction = () => {
                             </div>
                             <div className="flex-1">
                                 <div className="flex justify-between items-center mb-0.5">
-                                    <span className="text-xs font-bold text-white">
+                                    <span className="text-sm font-bold text-white">
                                         {isProcessing ? "Buscando hueco..." : "Nueva Solicitud"}
                                     </span>
-                                    <span className="text-[9px] text-zinc-500">Ahora</span>
+                                    <span className="text-xs text-zinc-500">Ahora</span>
                                 </div>
-                                <p className="text-[10px] text-zinc-400 leading-tight">
+                                <p className="text-xs text-zinc-400 leading-tight">
                                     {isProcessing
                                         ? "Optimizando agenda del día..."
                                         : "Lucía P. solicita turno para Estudios."}
@@ -190,7 +190,7 @@ const AgendaItem = ({ data }) => {
             )}
 
             {/* Columna Hora */}
-            <div className={`w-12 text-[10px] font-mono font-medium ${isGap ? 'text-zinc-600' : 'text-zinc-400'}`}>
+            <div className={`w-12 text-xs font-mono font-medium ${isGap ? 'text-zinc-600' : 'text-zinc-400'}`}>
                 {data.time}
             </div>
 
@@ -215,10 +215,10 @@ const AgendaItem = ({ data }) => {
                             {data.name.charAt(0)}
                         </div>
                         <div>
-                            <div className={`text-sm font-medium leading-none mb-1 ${isInProgress ? 'text-white' : 'text-zinc-200'}`}>
+                            <div className={`text-base font-medium leading-none mb-1 ${isInProgress ? 'text-white' : 'text-zinc-200'}`}>
                                 {data.name}
                             </div>
-                            <div className="text-[10px] text-zinc-500">{data.type}</div>
+                            <div className="text-xs text-zinc-500">{data.type}</div>
                         </div>
                     </div>
 

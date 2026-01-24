@@ -67,7 +67,7 @@ export const vantraMedData = {
     },
     demo: {
         title: 'Probá Vantra en tiempo real.',
-        subtitle: 'Navegá por el sistema y mirá cómo se ordena un turno y su historial automáticamente.',
+        subtitle: 'Esta es una muestra visual simplificada. La plataforma completa incluye historial clínico detallado, facturación y métricas avanzadas.',
         component: <MedDashboardPreview />
     },
     pricing: {

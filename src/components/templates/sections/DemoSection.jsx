@@ -30,13 +30,20 @@ const DemoSection = ({ data, theme }) => {
                 >
                     {/* Windows / Mac OS Controls Decoration */}
                     <div className="absolute top-0 left-0 w-full h-10 bg-white/5 border-b border-white/5 flex items-center px-4 gap-2 z-20">
-                        <div className="w-3 h-3 rounded-full bg-red-500/80" />
-                        <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
-                        <div className="w-3 h-3 rounded-full bg-green-500/80" />
+                        <div className="flex gap-2">
+                            <div className="w-3 h-3 rounded-full bg-red-500/80" />
+                            <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
+                            <div className="w-3 h-3 rounded-full bg-green-500/80" />
+                        </div>
 
                         {/* Address Bar Simulation */}
-                        <div className="ml-4 px-3 py-1 rounded bg-black/20 text-[10px] text-zinc-500 font-mono flex-1 text-center">
-                            vantra.system / dashboard / view
+                        <div className="ml-4 px-3 py-1 rounded bg-black/20 text-[10px] text-zinc-500 font-mono flex-1 text-center flex items-center justify-center gap-2">
+                            <span>vantra.system / dashboard / preview</span>
+                            <span className="bg-zinc-800 text-zinc-400 px-1.5 py-0.5 rounded-[4px] text-[9px] border border-white/5 tracking-wider hidden sm:inline-block">DEMO MODE</span>
+                        </div>
+
+                        <div className="text-[10px] text-zinc-600 font-medium hidden sm:block">
+                            Visual Sample Only
                         </div>
                     </div>
 
