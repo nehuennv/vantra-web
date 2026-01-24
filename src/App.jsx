@@ -4,6 +4,7 @@ import Navbar from './components/layout/Navbar';
 import Home from './pages/Home';
 import RestoProduct from './pages/RestoProduct';
 import MedProduct from './pages/MedProduct';
+import Team from './pages/Team';
 import GlobalAuroraBackground from './components/layout/GlobalAuroraBackground';
 import GlobalCursor from './components/layout/GlobalCursor';
 import GlobalSpotlight from './components/layout/GlobalSpotlight';
@@ -17,7 +18,11 @@ const ScrollToTop = () => {
   const { pathname } = useLocation();
 
   React.useEffect(() => {
-    window.scrollTo(0, 0);
+    // Timeout para asegurar que Lenis/Browser no sobreescriban el scroll
+    const timer = setTimeout(() => {
+      window.scrollTo(0, 0);
+    }, 100);
+    return () => clearTimeout(timer);
   }, [pathname]);
 
   return null;
@@ -55,6 +60,7 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/resto" element={<RestoProduct />} />
               <Route path="/med" element={<MedProduct />} />
+              <Route path="/equipo" element={<Team />} />
 
               {/* Rutas adicionales (Configuración, etc) */}
               <Route path="/configurar" element={<div className="pt-32 text-center">Configurador en construcción...</div>} />

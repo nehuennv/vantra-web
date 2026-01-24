@@ -5,44 +5,71 @@ import Card from '../ui/Card';
 
 const faqItems = [
     {
-        q: "¿Cuánto tiempo tarda el desarrollo de un sitio web?",
-        a: "7-10 días landing, 2-4 semanas e-commerce."
+        q: "¿Qué es Vantra y qué tipo de empresa somos?",
+        a: (
+            <>
+                <p className="mb-4">Vantra es una empresa SaaS especializada en automatización con inteligencia artificial para negocios que escalan.</p>
+                <p className="mb-4">Desarrollamos productos propios (agentes de IA, sistemas de reservas, dashboards, CRM y automatizaciones) y, cuando el negocio lo requiere, diseñamos y desarrollamos soluciones totalmente a medida, adaptadas a problemáticas específicas.</p>
+                <p>Nuestro enfoque no es vender software estándar, sino resolver necesidades reales de cada negocio con tecnología aplicada.</p>
+            </>
+        )
     },
     {
-        q: "¿Ofrecen soporte después de entregar el proyecto?",
-        a: "Absolutamente. No entregamos código y desaparecemos. Ofrecemos periodos de garantía y planes de mantenimiento mensual para asegurar que tu sistema siga funcionando, actualizado y seguro."
+        q: "¿Vantra ofrece productos cerrados o soluciones personalizadas?",
+        a: (
+            <>
+                <p className="mb-4">Vantra trabaja con un modelo híbrido y flexible:</p>
+                <ul className="list-disc pl-5 mb-4 space-y-2">
+                    <li>Contamos con productos propios listos para implementar.</li>
+                    <li>Cuando la operación del cliente lo exige, desarrollamos funcionalidades o sistemas a medida, específicos para su flujo de trabajo.</li>
+                </ul>
+                <p>Esto nos permite combinar rapidez, estabilidad y personalización, sin forzar al negocio a adaptarse a un software genérico.</p>
+            </>
+        )
     },
     {
-        q: "¿Cómo funciona el proceso de trabajo?",
-        a: "Es simple y transparente: 1. Descubrimiento (Reunión inicial), 2. Estrategia y Diseño (Propuesta visual), 3. Desarrollo (Sprints semanales), 4. Testing y Lanzamiento. Te mantenemos al tanto en cada etapa."
+        q: "¿Qué tipo de soluciones desarrolla Vantra según la necesidad del cliente?",
+        a: (
+            <>
+                <p className="mb-4">Desarrollamos soluciones tecnológicas en función de la problemática o necesidad puntual del negocio, no de un catálogo cerrado.</p>
+                <p className="mb-4">Según el caso, Vantra puede desarrollar e integrar:</p>
+                <ul className="list-disc pl-5 mb-4 space-y-2">
+                    <li>Agentes de IA en WhatsApp para ventas, reservas o atención.</li>
+                    <li>Automatizaciones comerciales y operativas.</li>
+                    <li>Dashboards y CRM personalizados.</li>
+                    <li>Sistemas web o software interno a medida.</li>
+                    <li>Soluciones SaaS específicas por industria.</li>
+                    <li>Estrategias de paid media integradas al sistema.</li>
+                </ul>
+                <p>Cada solución se diseña con un único objetivo: ordenar, automatizar y escalar la operación.</p>
+            </>
+        )
     },
     {
-        q: "¿Puedo ver ejemplos de trabajos anteriores?",
-        a: "Sí, claro. Nuestro portfolio habla por nosotros. En la reunión inicial te mostramos casos de estudio específicos similares a tu industria para que veas la calidad y los resultados."
+        q: "¿Cómo es el proceso de implementación de una solución Vantra?",
+        a: (
+            <>
+                <p className="mb-4">El proceso comienza con un diagnóstico profundo, donde analizamos cómo funciona hoy el negocio y qué lo está limitando.</p>
+                <p className="mb-2">A partir de eso:</p>
+                <ul className="list-disc pl-5 mb-4 space-y-2">
+                    <li>Definimos si se implementan productos existentes, desarrollos a medida o una combinación de ambos.</li>
+                    <li>Diseñamos la arquitectura de la solución.</li>
+                    <li>Desarrollamos, integramos y configuramos el sistema.</li>
+                    <li>Probamos y ajustamos antes de salir en producción.</li>
+                </ul>
+                <p>El tiempo promedio de implementación es de hasta 15 días hábiles, dependiendo del alcance del desarrollo.</p>
+            </>
+        )
     },
     {
-        q: "¿Qué necesito para empezar un proyecto?",
-        a: "Solo tu visión. Nosotros te ayudamos a definir los requerimientos técnicos, el contenido y la estructura. Si ya tenés branding y textos, genial. Si no, lo construimos juntos."
-    },
-    {
-        q: "¿Trabajan con empresas fuera de Argentina?",
-        a: "Sí, trabajamos globalmente. Tenemos clientes en USA, España y Latam. Nuestros procesos son 100% remotos y adaptados a diferentes zonas horarias y monedas."
-    },
-    {
-        q: "¿Cuál es la inversión mínima?",
-        a: "Nos enfocamos en proyectos que buscan calidad y retorno. Para desarrollos web, los proyectos suelen iniciar desde los $450 USD. Para campañas de Growth, recomendamos inversiones publicitarias que permitan testear y escalar."
-    },
-    {
-        q: "¿Qué pasa si no me gusta el resultado?",
-        a: "Trabajamos con aprobaciones por etapas. No avanzamos a desarrollo sin tu OK en el diseño. Esto minimiza riesgos y asegura que el producto final sea exactamente lo que esperabas (o mejor)."
-    },
-    {
-        q: "¿Ofrecen garantías en campañas?",
-        a: "En marketing digital nadie honesto puede garantizar resultados exactos, pero garantizamos el método: testeo científico, optimización constante y transparencia total en los datos. No gastamos presupuesto sin sentido."
-    },
-    {
-        q: "¿Cómo manejan los pagos?",
-        a: "Generalmente trabajamos con un anticipo del 50% para iniciar y el 50% contra entrega final. Aceptamos transferencias bancarias, USDT (Crypto) y plataformas internacionales como Payoneer."
+        q: "¿Vantra solo entrega tecnología o acompaña el crecimiento del negocio?",
+        a: (
+            <>
+                <p className="mb-4">Vantra no solo desarrolla tecnología.</p>
+                <p className="mb-4">Acompañamos al negocio con soporte, mantenimiento y evolución continua del sistema, asegurando que la solución siga siendo eficiente a medida que la operación crece o cambia.</p>
+                <p>La automatización no reemplaza personas: libera tiempo, reduce errores y permite que el negocio sea más previsible y escalable.</p>
+            </>
+        )
     }
 ];
 
@@ -69,9 +96,9 @@ const FAQItem = ({ item, isOpen, toggle }) => {
                         transition={{ duration: 0.3, ease: "easeInOut" }}
                         className="overflow-hidden"
                     >
-                        <p className="pb-8 text-gray-400 leading-relaxed max-w-3xl font-medium">
+                        <div className="pb-8 text-gray-400 leading-relaxed max-w-3xl font-medium">
                             {item.a}
-                        </p>
+                        </div>
                     </motion.div>
                 )}
             </AnimatePresence>

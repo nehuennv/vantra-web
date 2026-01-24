@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, ArrowRight, ChevronDown, Utensils, HeartPulse, Layers, Sparkles, Home } from 'lucide-react';
+import { Menu, X, ArrowRight, ChevronDown, Utensils, HeartPulse, Layers, Sparkles, Home, Users } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 import LogoCompleto from '../../assets/logo/logo-completo.svg';
@@ -44,6 +44,7 @@ const Navbar = () => {
         { name: 'Medicina', path: '/med', icon: HeartPulse, desc: 'Salud digital avanzada' }
       ]
     },
+    { name: 'Equipo', path: '/equipo', icon: Users, type: 'link' },
   ];
 
   return (
@@ -248,6 +249,7 @@ const Navbar = () => {
                         // STANDARD LINK
                         <Link
                           to={link.path}
+                          onClick={() => window.scrollTo(0, 0)}
                           className={`
                                 relative px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300
                                 ${isActive ? 'text-white' : 'text-gray-400 hover:text-white'}
