@@ -48,7 +48,7 @@ const features = [
 const SolutionSection = () => {
     const [activeIndex, setActiveIndex] = useState(0);
     const timerRef = useRef(null);
-    const DURATION = 6000;
+    const DURATION = 10000;
 
     // Timer Logic Optimizado
     useEffect(() => {
@@ -93,27 +93,37 @@ const SolutionSection = () => {
                                     key={feature.id}
                                     onClick={() => handleSelect(index)}
                                     onKeyDown={(e) => handleKeyDown(e, index)}
+                                    style={isActive ? {
+                                        boxShadow: `0 0 40px -10px ${feature.color}20`,
+                                        borderColor: `${feature.color}60`
+                                    } : {}}
                                     className={`
                                         group relative p-6 rounded-2xl cursor-pointer transition-all duration-500 border text-left w-full outline-none overflow-hidden
                                         ${isActive
-                                            ? 'bg-zinc-900 border-zinc-800 shadow-xl'
+                                            ? 'bg-zinc-900/40 backdrop-blur-md'
                                             : 'bg-transparent border-transparent hover:bg-white/[0.02] opacity-60 hover:opacity-100'
                                         }
                                     `}
                                 >
                                     {/* CONTENIDO DE LA TARJETA */}
                                     <div className="flex items-start gap-5 relative z-10 pb-2"> {/* Added padding bottom for bar */}
-                                        <div className={`
-                                            mt-1 p-3 rounded-xl transition-colors duration-500
-                                            ${isActive ? 'bg-white text-black' : 'bg-zinc-800 text-zinc-500 group-hover:text-zinc-300'}
-                                        `}>
+                                        <div
+                                            className={`
+                                                mt-1 p-3 rounded-xl transition-all duration-500
+                                                ${isActive ? 'text-white scale-110' : 'bg-white/5 text-zinc-500 group-hover:text-zinc-300'}
+                                            `}
+                                            style={isActive ? {
+                                                backgroundColor: feature.color,
+                                                boxShadow: `0 0 20px -5px ${feature.color}`
+                                            } : {}}
+                                        >
                                             <feature.icon size={20} strokeWidth={2} />
                                         </div>
                                         <div>
                                             <h3 className={`text-lg font-medium mb-2 transition-colors duration-300 ${isActive ? 'text-white' : 'text-zinc-400'}`}>
                                                 {feature.title}
                                             </h3>
-                                            <p className={`text-sm leading-relaxed transition-colors duration-300 ${isActive ? 'text-zinc-400' : 'text-zinc-600'}`}>
+                                            <p className={`text-sm leading-relaxed transition-colors duration-300 ${isActive ? 'text-zinc-300' : 'text-zinc-600'}`}>
                                                 {feature.description}
                                             </p>
                                         </div>

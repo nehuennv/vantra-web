@@ -1,74 +1,206 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Check } from 'lucide-react';
+import { Check, Star, ArrowRight } from 'lucide-react';
 import Button from '../../ui/Button';
 
-const PricingSection = ({ data, theme }) => {
+const PricingSection = ({ data }) => {
     const { title, subtitle, plans } = data;
+    const [hoveredIndex, setHoveredIndex] = useState(null);
+
+    // Variantes para orquestar la animación de entrada perfecta (sin glitches)
+    const containerVariants = {
+        hidden: { opacity: 0 },
+        visible: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.15, // Retraso entre cada card
+                delayChildren: 0.2
+            }
+        }
+    };
+
+    const cardVariants = {
+        hidden: { opacity: 0, y: 40 },
+        visible: {
+            opacity: 1,
+            y: 0,
+            transition: {
+                type: "spring",
+                stiffness: 50,
+                damping: 20
+            }
+        }
+    };
 
     return (
-        <section className="py-24 px-6 relative">
-            <div className="container mx-auto max-w-7xl">
+        <section className="py-24 px-6 relative overflow-hidden">
+
+            {/* Fondo limpio y oscuro */}
+            <div className="absolute inset-0" />
+
+            <div className="container mx-auto max-w-7xl relative z-10">
 
                 {/* Header */}
-                <div className="text-center max-w-3xl mx-auto mb-16">
-                    <h2 className="text-4xl md:text-5xl font-display font-medium text-white mb-6">{title}</h2>
-                    <p className="text-lg text-zinc-400">{subtitle}</p>
+                <div className="text-center max-w-3xl mx-auto mb-20">
+                    <motion.h2
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        className="text-4xl md:text-6xl font-display font-normal text-white mb-6 tracking-tight leading-tight"
+                    >
+                        {title}
+                    </motion.h2>
+                    <motion.p
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: 0.1 }}
+                        className="text-lg text-zinc-400 font-light"
+                    >
+                        {subtitle}
+                    </motion.p>
                 </div>
 
-                {/* Plans Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {/* Grid con Stagger Animation */}
+                <motion.div
+                    className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch"
+                    variants={containerVariants}
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, margin: "-100px" }} // Margen para asegurar que cargue bien
+                >
                     {plans.map((plan, idx) => {
-                        const isHighlight = plan.highlight || idx === 0; // Default highlight logic or prop based
+                        const isHighlight = plan.highlight === true;
+                        const isHovered = hoveredIndex === idx;
 
                         return (
                             <motion.div
                                 key={idx}
-                                initial={{ opacity: 0, y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ duration: 0.5, delay: idx * 0.1 }}
-                                className="relative flex flex-col h-full"
-                                style={{}}
+                                variants={cardVariants}
+                                onMouseEnter={() => setHoveredIndex(idx)}
+                                onMouseLeave={() => setHoveredIndex(null)}
+                                className="relative flex flex-col h-full rounded-[24px] overflow-hidden group"
+                                style={{
+                                    // FONDO UNIFICADO: Todas tienen el mismo peso visual base.
+                                    backgroundColor: '#18181b', // Zinc-900 sólido y limpio
+
+                                    // BORDE: Control total.
+                                    // Highlight: Color primario.
+                                    // Normal: Zinc-800 (Gris oscuro).
+                                    // Hover (Normal): Se ilumina un poco.
+                                    borderWidth: '1px',
+                                    borderStyle: 'solid',
+                                    borderColor: isHighlight
+                                        ? 'var(--product-primary)'
+                                        : (isHovered ? '#52525b' : '#27272a'), // Hover: Zinc-600, Normal: Zinc-800
+
+                                    // SOMBRA: Solo luz ambiental del color primario en la destacada o hover.
+                                    // Evitamos sombras verdes/default.
+                                    boxShadow: isHighlight
+                                        ? '0 0 40px -10px var(--product-primary-opacity-20, rgba(14, 165, 233, 0.2))'
+                                        : (isHovered ? '0 10px 30px -10px rgba(0,0,0,0.5)' : 'none'),
+
+                                    transition: 'all 0.3s ease-out'
+                                }}
                             >
-                                {/* Highlight Badge */}
-                                {isHighlight && (
-                                    <div className="absolute top-0 right-0 p-4">
-                                        <div className="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest bg-white/10 text-white"
-                                            style={{ color: 'var(--product-primary)' }}>
-                                            Full Suite
-                                        </div>
+                                {/* --- CONTENIDO --- */}
+                                <div className="p-8 flex flex-col h-full relative z-10">
+
+                                    {/* Header + Badge */}
+                                    <div className="flex justify-between items-start mb-6 h-8">
+                                        <h3 className="text-2xl font-medium tracking-tight text-white transition-colors duration-300">
+                                            {plan.title}
+                                        </h3>
+
+                                        {/* Badge Corregido: Estilos hardcoded para evitar bordes blancos */}
+                                        {isHighlight && (
+                                            <div
+                                                className="px-3 py-1 rounded-full flex items-center gap-1.5"
+                                                style={{
+                                                    backgroundColor: 'var(--product-primary-opacity-10, rgba(14, 165, 233, 0.1))',
+                                                    border: '1px solid var(--product-primary)', // Color explícito
+                                                    color: 'var(--product-primary)',
+                                                    boxShadow: 'none'
+                                                }}
+                                            >
+                                                <Star size={10} fill="currentColor" strokeWidth={0} />
+                                                <span className="text-[10px] font-bold uppercase tracking-wider">
+                                                    Recomendado
+                                                </span>
+                                            </div>
+                                        )}
                                     </div>
-                                )
-                                }
 
-                                <div className="mb-8">
-                                    <h3 className="text-2xl font-bold text-white mb-2">{plan.title}</h3>
-                                    <p className="text-zinc-400 text-sm leading-relaxed min-h-[40px]">{plan.description}</p>
+                                    {/* Descripción Legible */}
+                                    <p className="text-zinc-400 text-sm leading-relaxed mb-8 min-h-[48px] transition-colors duration-300 group-hover:text-zinc-300">
+                                        {plan.description}
+                                    </p>
+
+                                    {/* Separador */}
+                                    <div
+                                        className="w-full h-px mb-8 transition-colors duration-300"
+                                        style={{ backgroundColor: isHighlight ? 'var(--product-primary-opacity-30, rgba(14,165,233,0.3))' : '#27272a' }}
+                                    />
+
+                                    {/* Features List */}
+                                    <div className="flex-1 space-y-6 mb-10">
+                                        {plan.features.map((feature, fIdx) => (
+                                            <div key={fIdx} className="flex items-start gap-4 group/item">
+                                                {/* Check Personalizado */}
+                                                <div
+                                                    className="mt-0.5 relative flex items-center justify-center shrink-0 rounded-full transition-all duration-300"
+                                                    style={{
+                                                        color: isHighlight || isHovered ? 'var(--product-primary)' : '#52525b', // Zinc-600
+                                                    }}
+                                                >
+                                                    <Check
+                                                        size={16}
+                                                        strokeWidth={isHighlight || isHovered ? 3 : 2}
+                                                    />
+                                                </div>
+                                                <span
+                                                    className={`text-sm transition-colors duration-300 ${isHighlight || isHovered ? 'text-zinc-100' : 'text-zinc-400'}`}
+                                                >
+                                                    {feature}
+                                                </span>
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    {/* Botón CTA */}
+                                    <div className="mt-auto">
+                                        <Button
+                                            className="w-full h-12 text-sm rounded-xl font-medium tracking-wide transition-all duration-300 flex items-center justify-center gap-2"
+                                            style={{
+                                                // Highlight: Color sólido. Normal: Outline que se llena al hover.
+                                                backgroundColor: isHighlight
+                                                    ? 'var(--product-primary)'
+                                                    : (isHovered ? '#fff' : 'transparent'),
+
+                                                color: isHighlight
+                                                    ? '#000'
+                                                    : (isHovered ? '#000' : '#fff'),
+
+                                                border: '1px solid',
+                                                borderColor: isHighlight
+                                                    ? 'var(--product-primary)'
+                                                    : (isHovered ? '#fff' : '#3f3f46'), // Zinc-700
+
+                                                cursor: 'pointer'
+                                            }}
+                                        >
+                                            <span>Consultar</span>
+                                            <ArrowRight
+                                                size={16}
+                                                className={`transition-transform duration-300 ${isHovered ? 'translate-x-1' : ''}`}
+                                            />
+                                        </Button>
+                                    </div>
                                 </div>
-
-                                <div className="flex-1 space-y-4 mb-10">
-                                    {plan.features.map((feature, fIdx) => (
-                                        <div key={fIdx} className="flex items-start gap-3 text-sm text-zinc-300">
-                                            <Check size={16} className="mt-0.5 shrink-0" style={{ color: 'var(--product-primary)' }} />
-                                            <span>{feature}</span>
-                                        </div>
-                                    ))}
-                                </div>
-
-                                <Button
-                                    className="w-full"
-                                    variant={isHighlight ? 'default' : 'outline'}
-                                    style={isHighlight ? { backgroundColor: 'var(--product-primary)', color: 'black', border: 'none' } : {}}
-                                >
-                                    Seleccionar Plan
-                                </Button>
-
                             </motion.div>
                         );
                     })}
-                </div>
-
+                </motion.div>
             </div>
         </section >
     );

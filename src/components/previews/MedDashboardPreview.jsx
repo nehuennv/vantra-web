@@ -19,7 +19,10 @@ import {
     X,
     Save,
     Loader2,
-    AlertCircle
+    AlertCircle,
+    FileText,
+    Image as ImageIcon,
+    ActivitySquare
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -28,7 +31,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 // ==========================================
 
 const USER_IDENTITY = {
-    name: "Dr. Alejandro Vantra",
+    name: "Dr. Pascual",
     role: "Cardiólogo Intervencionista",
     avatar: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&q=80&w=150&h=150",
     clinic: "CardioMed Premium"
@@ -46,7 +49,15 @@ const INITIAL_APPOINTMENTS = [
     { id: 101, patientId: 1, patientName: "Mariana López", type: "Primera Consulta", time: "09:00", date: "2025-01-24", status: "En curso", tags: ["OSDE", "Prioridad"] },
     { id: 102, patientId: 2, patientName: "Carlos Ruiz", type: "Control Post-Op", time: "10:30", date: "2025-01-24", status: "Confirmado", tags: ["Swiss Medical"] },
     { id: 103, patientId: 3, patientName: "Elena Gómez", type: "Ergometría", time: "11:15", date: "2025-01-24", status: "Pendiente", tags: ["Particular"] },
+    { id: 102, patientId: 2, patientName: "Carlos Ruiz", type: "Control Post-Op", time: "10:30", date: "2025-01-24", status: "Confirmado", tags: ["Swiss Medical"] },
+    { id: 103, patientId: 3, patientName: "Elena Gómez", type: "Ergometría", time: "11:15", date: "2025-01-24", status: "Pendiente", tags: ["Particular"] },
     { id: 104, patientId: 4, patientName: "Roberto Diaz", type: "Chequeo General", time: "14:00", date: "2025-01-24", status: "Confirmado", tags: ["Galeno"] },
+];
+
+const MOCK_HISTORY = [
+    { date: "2023-11-15", type: "Consulta", note: "Paciente refiere dolor torácico leve al esfuerzo. Se solicita ECG y Ergometría.", doctor: "Dr. Vantra" },
+    { date: "2023-11-20", type: "Estudio", note: "Ergometría s/p. Protocolo de Bruce. Detenida por fatiga al 7mo minuto. Sin cambios isquémicos.", doctor: "Dra. Sola" },
+    { date: "2024-01-20", type: "Control", note: "Trae estudios. Se ajusta medicación antihipertensiva. Próximo control en 6 meses.", doctor: "Dr. Vantra" },
 ];
 
 // ==========================================
@@ -376,15 +387,20 @@ const AgendaView = ({ appointments, onAddAppointment }) => {
     );
 };
 
-const PatientsView = ({ patients }) => {
+const PatientsView = ({ patients, onAddPatient, onSelectPatient }) => {
     const [search, setSearch] = useState('');
     const filteredPatients = useMemo(() => patients.filter(p => p.name.toLowerCase().includes(search.toLowerCase()) || p.history.toLowerCase().includes(search.toLowerCase())), [patients, search]);
 
     return (
         <motion.div initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -10 }} className="h-full flex flex-col">
-            <div className="mb-6 relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={14} />
-                <input type="text" placeholder="Buscar paciente..." value={search} onChange={(e) => setSearch(e.target.value)} className={`w-full pl-9 pr-4 py-2.5 rounded-xl ${UI.glass} text-sm focus:outline-none focus:ring-2 focus:ring-sky-500/20 transition-all`} />
+            <div className="mb-6 relative flex gap-3">
+                <div className="relative flex-1">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={14} />
+                    <input type="text" placeholder="Buscar paciente..." value={search} onChange={(e) => setSearch(e.target.value)} className={`w-full pl-9 pr-4 py-2.5 rounded-xl ${UI.glass} text-sm focus:outline-none focus:ring-2 focus:ring-sky-500/20 transition-all`} />
+                </div>
+                <button onClick={onAddPatient} className={`${UI.primaryBg} hover:opacity-90 text-white px-3 rounded-xl text-xs font-medium shadow-md flex items-center gap-1 transition-transform hover:scale-105 active:scale-95`}>
+                    <Plus size={16} /> <span className="hidden sm:inline">Nuevo</span>
+                </button>
             </div>
             <div className={`${UI.card} flex-1 overflow-hidden`}>
                 <div className="overflow-x-auto">
@@ -400,11 +416,11 @@ const PatientsView = ({ patients }) => {
                         </thead>
                         <tbody className="text-sm text-slate-600">
                             {filteredPatients.map((p) => (
-                                <tr key={p.id} className="border-b border-slate-50 hover:bg-slate-50/50 transition-colors">
+                                <tr key={p.id} onClick={() => onSelectPatient(p)} className="border-b border-slate-50 hover:bg-slate-50/50 transition-colors cursor-pointer group">
                                     <td className="p-3 pl-6">
                                         <div className="flex items-center gap-3">
                                             <img src={p.avatar} alt="" className="w-7 h-7 rounded-full object-cover" />
-                                            <span className="font-medium text-slate-700">{p.name}</span>
+                                            <span className="font-medium text-slate-700 group-hover:text-[hsl(199,89%,48%)] transition-colors">{p.name}</span>
                                         </div>
                                     </td>
                                     <td className="p-3 text-xs text-slate-500 font-mono">{p.history}</td>
@@ -463,7 +479,7 @@ const SaveButton = ({ onClick }) => {
     );
 };
 
-const NewAppointmentModal = ({ isOpen, onClose, patients, onSave, executeAction }) => {
+const NewAppointmentModal = ({ isOpen, onClose, patients, onSave, executeAction, onNewPatient }) => {
     const [formData, setFormData] = useState({ patientId: '', type: 'Consulta General', time: '', notes: '' });
     useEffect(() => { if (isOpen) setFormData({ patientId: '', type: 'Consulta General', time: '', notes: '' }) }, [isOpen]);
     const handleSave = async () => {
@@ -479,20 +495,148 @@ const NewAppointmentModal = ({ isOpen, onClose, patients, onSave, executeAction 
         <AnimatePresence>
             {isOpen && (
                 <>
-                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose} className="fixed inset-0 bg-slate-900/20 backdrop-blur-sm z-[70]" />
-                    <motion.div initial={{ opacity: 0, scale: 0.95, y: 10 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 10 }} className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-sm bg-white rounded-2xl shadow-xl z-[80] p-6 border border-slate-100">
-                        <div className="flex justify-between items-center mb-6"><h3 className="text-base font-medium text-slate-800">Nuevo Turno</h3><button onClick={onClose} className="p-1 hover:bg-slate-50 rounded-full text-slate-400"><X size={18} /></button></div>
-                        <div className="space-y-4">
-                            <div><label className="block text-[10px] font-medium text-slate-500 uppercase mb-1">Paciente</label><select className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-sky-500" value={formData.patientId} onChange={e => setFormData({ ...formData, patientId: e.target.value })}><option value="">Seleccionar...</option>{patients.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}</select></div>
-                            <div className="grid grid-cols-2 gap-4">
-                                <div><label className="block text-[10px] font-medium text-slate-500 uppercase mb-1">Tipo</label><select className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none" value={formData.type} onChange={e => setFormData({ ...formData, type: e.target.value })}><option>Consulta General</option><option>Control</option><option>Urgencia</option></select></div>
-                                <div><label className="block text-[10px] font-medium text-slate-500 uppercase mb-1">Hora</label><input type="time" className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none" value={formData.time} onChange={e => setFormData({ ...formData, time: e.target.value })} /></div>
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose} className="absolute inset-0 bg-slate-900/30 backdrop-blur-md z-[70]" />
+                    <div className="absolute inset-0 z-[80] flex items-center justify-center pointer-events-none">
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.95, y: 10 }}
+                            className="w-full max-w-sm bg-white rounded-2xl shadow-xl p-6 border border-slate-100 pointer-events-auto"
+                        >
+                            <div className="flex justify-between items-center mb-6"><h3 className="text-base font-medium text-slate-800">Nuevo Turno</h3><button onClick={onClose} className="p-1 hover:bg-slate-50 rounded-full text-slate-400"><X size={18} /></button></div>
+                            <div className="space-y-4">
+                                <div>
+                                    <div className="flex justify-between items-center mb-1">
+                                        <label className="block text-[10px] font-medium text-slate-500 uppercase">Paciente</label>
+                                        <button onClick={onNewPatient} className="text-[10px] text-sky-500 hover:text-sky-600 font-medium flex items-center gap-1">+ Nuevo</button>
+                                    </div>
+                                    <select className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-sky-500" value={formData.patientId} onChange={e => setFormData({ ...formData, patientId: e.target.value })}><option value="">Seleccionar...</option>{patients.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}</select>
+                                </div>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div><label className="block text-[10px] font-medium text-slate-500 uppercase mb-1">Tipo</label><select className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none" value={formData.type} onChange={e => setFormData({ ...formData, type: e.target.value })}><option>Consulta General</option><option>Control</option><option>Urgencia</option></select></div>
+                                    <div><label className="block text-[10px] font-medium text-slate-500 uppercase mb-1">Hora</label><input type="time" className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none" value={formData.time} onChange={e => setFormData({ ...formData, time: e.target.value })} /></div>
+                                </div>
                             </div>
-                        </div>
-                        <div className="mt-6 flex justify-end gap-2"><button onClick={onClose} className="px-4 py-2 text-slate-500 font-medium text-xs hover:bg-slate-50 rounded-lg">Cancelar</button><SaveButton onClick={handleSave} /></div>
-                    </motion.div>
+                            <div className="mt-6 flex justify-end gap-2"><button onClick={onClose} className="px-4 py-2 text-slate-500 font-medium text-xs hover:bg-slate-50 rounded-lg">Cancelar</button><SaveButton onClick={handleSave} /></div>
+                        </motion.div>
+                    </div>
                 </>
             )}
+        </AnimatePresence>
+    );
+};
+
+const NewPatientModal = ({ isOpen, onClose, onSave, executeAction }) => {
+    const [formData, setFormData] = useState({ name: '', age: '', history: '' });
+    useEffect(() => { if (isOpen) setFormData({ name: '', age: '', history: '' }) }, [isOpen]);
+    const handleSave = async () => {
+        if (!formData.name) return;
+        await executeAction(() => {
+            onSave(formData);
+            onClose();
+        }, `Paciente ${formData.name} creado`);
+    };
+
+    return (
+        <AnimatePresence>
+            {isOpen && (
+                <>
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose} className="absolute inset-0 bg-slate-900/30 backdrop-blur-md z-[70]" />
+                    <div className="absolute inset-0 z-[80] flex items-center justify-center pointer-events-none">
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.95, y: 10 }}
+                            className="w-full max-w-sm bg-white rounded-2xl shadow-xl p-6 border border-slate-100 pointer-events-auto"
+                        >
+                            <div className="flex justify-between items-center mb-6"><h3 className="text-base font-medium text-slate-800">Nuevo Paciente</h3><button onClick={onClose} className="p-1 hover:bg-slate-50 rounded-full text-slate-400"><X size={18} /></button></div>
+                            <div className="space-y-4">
+                                <div><label className="block text-[10px] font-medium text-slate-500 uppercase mb-1">Nombre Completo</label><input type="text" className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-sky-500" value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} placeholder="Ej: Maria Gonzalez" /></div>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div><label className="block text-[10px] font-medium text-slate-500 uppercase mb-1">Edad</label><input type="number" className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none" value={formData.age} onChange={e => setFormData({ ...formData, age: e.target.value })} placeholder="34" /></div>
+                                    <div><label className="block text-[10px] font-medium text-slate-500 uppercase mb-1">Nro Historia</label><input type="text" className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none" value={formData.history} onChange={e => setFormData({ ...formData, history: e.target.value })} placeholder="HC-..." /></div>
+                                </div>
+                            </div>
+                            <div className="mt-6 flex justify-end gap-2"><button onClick={onClose} className="px-4 py-2 text-slate-500 font-medium text-xs hover:bg-slate-50 rounded-lg">Cancelar</button><SaveButton onClick={handleSave} /></div>
+                        </motion.div>
+                    </div>
+                </>
+            )}
+        </AnimatePresence>
+    );
+};
+
+const PatientHistoryModal = ({ patient, onClose }) => {
+    if (!patient) return null;
+    return (
+        <AnimatePresence>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose} className="absolute inset-0 bg-slate-900/30 backdrop-blur-md z-[70] flex justify-end">
+                <motion.div initial={{ x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }} transition={{ type: "spring", damping: 25, stiffness: 200 }} onClick={e => e.stopPropagation()} className="w-full max-w-md bg-white h-full shadow-2xl p-6 overflow-y-auto border-l border-slate-100 flex flex-col">
+                    <div className="flex justify-between items-start mb-6">
+                        <div className="flex items-center gap-4">
+                            <img src={patient.avatar} className="w-12 h-12 rounded-full object-cover border-2 border-slate-100" alt="" />
+                            <div>
+                                <h3 className="text-lg font-medium text-slate-800">{patient.name}</h3>
+                                <div className="flex gap-2 text-xs text-slate-500">
+                                    <span>{patient.history}</span>
+                                    <span>•</span>
+                                    <span>{patient.age} años</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button onClick={onClose} className="p-2 hover:bg-slate-50 rounded-full text-slate-400"><X size={20} /></button>
+                    </div>
+
+                    <div className="space-y-6 flex-1">
+                        <div>
+                            <h4 className="text-xs font-semibold text-slate-900 uppercase tracking-wider mb-3 flex items-center gap-2">
+                                <ActivitySquare size={14} className="text-sky-500" />
+                                Evolución Clínica
+                            </h4>
+                            <div className="space-y-4 pl-2 border-l-2 border-slate-100 ml-1.5">
+                                {MOCK_HISTORY.map((item, i) => (
+                                    <div key={i} className="relative pl-6 pb-2">
+                                        <div className="absolute -left-[9px] top-1.5 w-4 h-4 rounded-full bg-white border-2 border-sky-400"></div>
+                                        <div className="flex justify-between items-baseline mb-1">
+                                            <span className="text-xs font-medium text-slate-700">{item.type}</span>
+                                            <span className="text-[10px] text-slate-400">{item.date}</span>
+                                        </div>
+                                        <p className="text-sm text-slate-600 leading-relaxed bg-slate-50 p-3 rounded-lg border border-slate-100">
+                                            {item.note}
+                                        </p>
+                                        <div className="mt-1 text-[10px] text-slate-400 font-medium">{item.doctor}</div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div>
+                            <h4 className="text-xs font-semibold text-slate-900 uppercase tracking-wider mb-3 flex items-center gap-2">
+                                <ImageIcon size={14} className="text-purple-500" />
+                                Estudios Adjuntos
+                            </h4>
+                            <div className="grid grid-cols-2 gap-3">
+                                <div className="aspect-square bg-slate-100 rounded-xl border border-slate-200 flex items-center justify-center relative group overflow-hidden cursor-pointer">
+                                    <img src="https://images.unsplash.com/photo-1530497610245-94d3c16cda28?auto=format&fit=crop&q=80&w=300&h=300" alt="X-Ray" className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
+                                    <div className="absolute bottom-0 left-0 right-0 bg-black/60 p-2 text-white text-[10px] translate-y-full group-hover:translate-y-0 transition-transform">
+                                        Radiografía Tórax
+                                    </div>
+                                </div>
+                                <div className="aspect-square bg-slate-50 rounded-xl border border-slate-200 border-dashed flex flex-col items-center justify-center text-slate-400 gap-2 hover:bg-slate-100 transition-colors cursor-pointer">
+                                    <Plus size={20} />
+                                    <span className="text-[10px] font-medium">Adjuntar</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="mt-6 pt-6 border-t border-slate-100">
+                        <button className="w-full bg-slate-900 text-white py-2.5 rounded-xl text-sm font-medium hover:bg-slate-800 transition-colors">
+                            Nueva Evolución
+                        </button>
+                    </div>
+                </motion.div>
+            </motion.div>
         </AnimatePresence>
     );
 };
@@ -508,6 +652,8 @@ export default function MedDashboardPreview() {
     const [appointments, setAppointments] = useState(INITIAL_APPOINTMENTS);
     const [toasts, setToasts] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedPatient, setSelectedPatient] = useState(null);
+    const [isNewPatientModalOpen, setIsNewPatientModalOpen] = useState(false);
 
     const removeToast = (id) => setToasts(prev => prev.filter(t => t.id !== id));
     const addToast = (toast) => { const id = Date.now(); setToasts(prev => [...prev, { ...toast, id }]); setTimeout(() => removeToast(id), 4000); };
@@ -532,35 +678,50 @@ export default function MedDashboardPreview() {
         setAppointments(prev => [{ id: Date.now(), ...newApt, date: new Date().toISOString(), status: 'Confirmado' }, ...prev]);
     };
 
+    const handleAddPatient = (newPatient) => {
+        setPatients(prev => [...prev, { ...newPatient, id: Date.now(), status: "Activo", avatar: `https://ui-avatars.com/api/?name=${newPatient.name}&background=random` }]);
+    };
+
     if (!mounted) return null;
 
     return (
-        // Ajustamos para que ocupe todo el alto y ancho disponible del contenedor padre (aspect-video del DemoSection)
-        // Eliminamos vh y alturas fijas para evitar scroll externo no deseado.
-        <div className="w-full h-full p-2 md:p-4 lg:p-6 font-sans text-slate-600 bg-gradient-to-br from-white to-sky-100 backdrop-blur-sm flex flex-col items-center justify-center">
-            <div className="w-full h-full max-w-[1600px] mx-auto flex gap-4 md:gap-6 relative min-h-0 bg-white/40 backdrop-blur-md rounded-3xl border border-white/60 shadow-xl overflow-hidden p-1">
-                <ToastContainer toasts={toasts} removeToast={removeToast} />
-                <NewAppointmentModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} patients={patients} onSave={handleAddAppointment} executeAction={execute} />
+        // Estructura aplanada: Un solo contenedor padre con el gradiente.
+        // Sidebar y Contenido son hijos directos.
+        // Importante: relative para que los modales (absolute) se queden dentro de ESTE componente y no tapen el browser header del DemoSection.
+        <div className="w-full h-full font-sans text-slate-600 bg-gradient-to-br from-white to-sky-100 flex overflow-hidden relative">
+            <ToastContainer toasts={toasts} removeToast={removeToast} />
+            <NewAppointmentModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} patients={patients} onSave={handleAddAppointment} executeAction={execute} onNewPatient={() => { setIsModalOpen(false); setIsNewPatientModalOpen(true); }} />
+            <PatientHistoryModal patient={selectedPatient} onClose={() => setSelectedPatient(null)} />
+            <NewPatientModal isOpen={isNewPatientModalOpen} onClose={() => setIsNewPatientModalOpen(false)} onSave={handleAddPatient} executeAction={execute} />
 
+            {/* Sidebar ahora es hijo directo, con padding propio si es necesario */}
+            <div className="h-full z-20 p-4">
                 <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} mobileOpen={mobileOpen} setMobileOpen={setMobileOpen} />
-
-                <motion.div className={`flex-1 ${UI.islandContainer} flex flex-col`} initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.4 }}>
-                    {/* Fondo Decorativo Sutil dentro de la isla */}
-                    <div className={`absolute top-0 right-0 w-[400px] h-[400px] ${UI.primaryBg}/5 rounded-full blur-3xl pointer-events-none -translate-y-1/2 translate-x-1/3`}></div>
-
-                    <div className="relative z-10"><TopBar title={activeTab === 'dashboard' ? 'Panel General' : activeTab === 'agenda' ? 'Agenda' : activeTab === 'patients' ? 'Pacientes' : 'Ajustes'} setMobileOpen={setMobileOpen} /></div>
-
-                    <div className="flex-1 overflow-y-auto p-4 sm:p-6 pt-0 relative z-10 custom-scrollbar">
-                        <AnimatePresence mode="wait">
-                            {activeTab === 'dashboard' && <DashboardView key="dashboard" stats={stats} appointments={appointments} />}
-                            {activeTab === 'agenda' && <AgendaView key="agenda" appointments={appointments} onAddAppointment={() => setIsModalOpen(true)} />}
-                            {activeTab === 'patients' && <PatientsView key="patients" patients={patients} />}
-                            {activeTab === 'settings' && <SettingsView key="settings" executeAction={execute} />}
-                            {activeTab === 'analytics' && <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex items-center justify-center h-64 text-slate-400 text-sm"><p>Módulo de Analítica en desarrollo...</p></motion.div>}
-                        </AnimatePresence>
-                    </div>
-                </motion.div>
             </div>
+
+            {/* Contenido Principal */}
+            <motion.div
+                className={`flex-1 flex flex-col h-full overflow-hidden relative`}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.4 }}
+            >
+                {/* Fondo Decorativo */}
+                <div className={`absolute top-0 right-0 w-[400px] h-[400px] ${UI.primaryBg}/5 rounded-full blur-3xl pointer-events-none -translate-y-1/2 translate-x-1/3`}></div>
+
+                <div className="relative z-10 p-4 sm:p-6 pb-0"><TopBar title={activeTab === 'dashboard' ? 'Panel General' : activeTab === 'agenda' ? 'Agenda' : activeTab === 'patients' ? 'Pacientes' : 'Ajustes'} setMobileOpen={setMobileOpen} /></div>
+
+                <div className="flex-1 overflow-y-auto p-4 sm:p-6 pt-0 relative z-10 custom-scrollbar">
+                    <AnimatePresence mode="wait">
+                        {activeTab === 'dashboard' && <DashboardView key="dashboard" stats={stats} appointments={appointments} />}
+                        {activeTab === 'agenda' && <AgendaView key="agenda" appointments={appointments} onAddAppointment={() => setIsModalOpen(true)} />}
+                        {activeTab === 'patients' && <PatientsView key="patients" patients={patients} onSelectPatient={setSelectedPatient} onAddPatient={() => setIsNewPatientModalOpen(true)} />}
+                        {activeTab === 'settings' && <SettingsView key="settings" executeAction={execute} />}
+                        {activeTab === 'analytics' && <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex items-center justify-center h-64 text-slate-400 text-sm"><p>Módulo de Analítica en desarrollo...</p></motion.div>}
+                    </AnimatePresence>
+                </div>
+            </motion.div>
+
             <style>{`
         .custom-scrollbar::-webkit-scrollbar { width: 5px; height: 5px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }

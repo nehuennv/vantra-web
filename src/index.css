@@ -19,6 +19,18 @@
   h6 {
     @apply font-display tracking-tighter;
   }
+
+  button {
+    @apply outline-none focus:outline-none focus:ring-0 active:outline-none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Reset especifico para asegurar que no haya bordes extraños en focus */
+  button:focus,
+  button:active,
+  button:focus-visible {
+    outline: none !important;
+  }
 }
 
 @layer utilities {

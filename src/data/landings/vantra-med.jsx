@@ -1,4 +1,4 @@
-import MedDashboardPreview from '../../components/previews/MedDashboardPreview';
+import DemoTriggerWrapper from '../../components/previews/DemoTriggerWrapper';
 
 export const vantraMedData = {
     theme: {
@@ -68,25 +68,28 @@ export const vantraMedData = {
     demo: {
         title: 'Probá Vantra en tiempo real.',
         subtitle: 'Esta es una muestra visual simplificada. La plataforma completa incluye historial clínico detallado, facturación y métricas avanzadas.',
-        component: <MedDashboardPreview />
+        component: <DemoTriggerWrapper />
     },
     pricing: {
         title: 'Tres niveles de orden para tu consultorio.',
         subtitle: 'Elegí la etapa en la que estás hoy.',
         plans: [
-            {
-                title: 'Sistema Completo',
-                highlight: true,
-                description: 'Ideal si la demanda te desborda y la información clínica es un caos.',
-                features: ['Agente IA en WhatsApp', 'Agenda inteligente + Recordatorios', 'Historial clínico digital', 'Dashboard de gestión']
-            },
+
             {
                 title: 'Automatización + Control',
+                highlight: false,
                 description: 'Para consultorios que necesitan resolver el lío de turnos y WhatsApp.',
                 features: ['WhatsApp automatizado + Agenda', 'Panel de turnos y estados', 'Ficha de paciente básica asociada']
             },
             {
+                title: 'Sistema Completo',
+                highlight: true, // ESTE es el que manda
+                description: 'Ideal si la demanda te desborda y la información clínica es un caos.',
+                features: ['Agente IA en WhatsApp', 'Agenda inteligente + Recordatorios', 'Historial clínico digital', 'Dashboard de gestión']
+            },
+            {
                 title: 'Gestión Interna',
+                highlight: false,
                 description: 'Si ya tenés quien atienda el teléfono, pero necesitás ordenar la información.',
                 features: ['Panel central de agenda', 'Historial organizado', 'Sin automatización de WhatsApp']
             }

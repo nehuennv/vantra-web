@@ -14,6 +14,7 @@ export default {
             },
             colors: {
                 vantra: {
+                    DEFAULT: '#EDF246',   // Permite usar bg-vantra, text-vantra, border-vantra
                     neon: '#EDF246',      // Tu Amarillo Ácido (Accent Principal)
                     // EL AZUL SUAVE "APPLE" (Usar para brillos secundarios)
                     ice: '#A0E9FF',
@@ -22,6 +23,11 @@ export default {
                     bg: '#050507',
                     card: '#0A0A0B',
                     surface: '#121214',
+                },
+                // Alias para que funcione text-dark-900 si se usa en componentes
+                dark: {
+                    900: '#18181b', // zinc-900
+                    base: '#050507', // vantra-bg
                 }
             },
             backgroundImage: {

@@ -1,69 +1,60 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 
-const DemoSection = ({ data, theme }) => {
+const DemoSection = ({ data }) => {
     const { title, subtitle, component: Component } = data;
 
     return (
-        <section className="py-24 px-6 relative overflow-hidden">
-            {/* Background Decorative Grid Removed to keep global style */}
+        <section className="relative py-32 px-4 overflow-visible">
+
+            {/* 1. Ambient Glow (Luz de fondo para dar profundidad) */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-3xl h-[500px] bg-[var(--product-primary)]/20 blur-[120px] rounded-full pointer-events-none z-0" />
 
             <div className="container mx-auto relative z-10 flex flex-col items-center">
 
-                {/* Header */}
-                <div className="text-center max-w-3xl mb-16">
-                    <h2 className="text-4xl md:text-5xl font-display font-medium text-white mb-6">
+                {/* Header Typography - Más limpio y centrado */}
+                <div className="text-center max-w-4xl mb-16 space-y-6">
+                    <motion.h2
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        className="text-4xl md:text-6xl font-bold text-white tracking-tight leading-tight"
+                    >
                         {title}
-                    </h2>
-                    <p className="text-lg text-zinc-400">
+                    </motion.h2>
+                    <motion.p
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: 0.1 }}
+                        className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto font-light leading-relaxed"
+                    >
                         {subtitle}
-                    </p>
+                    </motion.p>
                 </div>
 
-                {/* Interactive Dashboard Container */}
+                {/* Dashboard Container - Sin barra de navegador, estilo "Floating Glass" */}
                 <motion.div
-                    initial={{ opacity: 0, scale: 0.95, y: 30 }}
-                    whileInView={{ opacity: 1, scale: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.8 }}
-                    className="w-full max-w-6xl aspect-video bg-zinc-900 rounded-2xl border border-white/10 shadow-2xl overflow-hidden relative group"
+                    initial={{ opacity: 0, scale: 0.9, rotateX: 10 }}
+                    whileInView={{ opacity: 1, scale: 1, rotateX: 0 }}
+                    viewport={{ once: true, margin: "-100px" }}
+                    transition={{ duration: 0.8, type: "spring", bounce: 0.2 }}
+                    className="w-full max-w-7xl relative group perspective-1000"
                 >
-                    {/* Windows / Mac OS Controls Decoration */}
-                    <div className="absolute top-0 left-0 w-full h-10 bg-white/5 border-b border-white/5 flex items-center px-4 gap-2 z-20">
-                        <div className="flex gap-2">
-                            <div className="w-3 h-3 rounded-full bg-red-500/80" />
-                            <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
-                            <div className="w-3 h-3 rounded-full bg-green-500/80" />
-                        </div>
+                    {/* Borde Brillante Sutil */}
+                    <div className="absolute -inset-[1px] bg-gradient-to-b from-white/20 to-transparent rounded-[2.5rem] blur-[1px] pointer-events-none" />
 
-                        {/* Address Bar Simulation */}
-                        <div className="ml-4 px-3 py-1 rounded bg-black/20 text-[10px] text-zinc-500 font-mono flex-1 text-center flex items-center justify-center gap-2">
-                            <span>vantra.system / dashboard / preview</span>
-                            <span className="bg-zinc-800 text-zinc-400 px-1.5 py-0.5 rounded-[4px] text-[9px] border border-white/5 tracking-wider hidden sm:inline-block">DEMO MODE</span>
-                        </div>
-
-                        <div className="text-[10px] text-zinc-600 font-medium hidden sm:block">
-                            Visual Sample Only
-                        </div>
-                    </div>
-
-                    {/* Actual Demo Component Host */}
-                    <div className="absolute inset-0 top-10 overflow-y-auto custom-scrollbar bg-zinc-950">
+                    {/* El Componente Real (Wrapper) */}
+                    <div className="relative w-full aspect-[4/3] md:aspect-video rounded-[2.5rem] overflow-hidden shadow-2xl shadow-black/50 bg-slate-950 border border-white/10">
                         {Component ? Component : (
-                            <div className="flex items-center justify-center h-full text-zinc-500">
-                                [ Interactive Component Placeholder ]
+                            <div className="w-full h-full flex items-center justify-center text-slate-600">
+                                Componente no cargado
                             </div>
                         )}
                     </div>
 
-                    {/* Overlay Hint */}
-                    <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-0 transition-opacity pointer-events-none">
-                        {/* This could be an overlay "Click to Interact" if we used an iframe, 
-                 but since we are mounting a React component, we want it interactive immediately probably.
-                 Leaving empty for now.
-             */}
-                    </div>
-
+                    {/* Reflejo en el piso (Opcional, da efecto 3D muy premium) */}
+                    <div className="absolute top-full left-0 right-0 h-24 bg-gradient-to-b from-[var(--product-primary)]/10 to-transparent blur-xl opacity-30 transform scale-x-90" />
                 </motion.div>
 
             </div>

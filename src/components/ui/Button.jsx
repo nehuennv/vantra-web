@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { cn } from "../../lib/utils";
 
 const variantStyles = {
-    primary: "bg-vantra text-dark-900 font-bold hover:bg-white hover:text-black hover:shadow-[0_0_20px_rgba(237,242,70,0.5)]",
+    primary: "bg-vantra text-dark-900 font-bold hover:bg-white hover:text-black",
     secondary: "bg-dark-base/50 text-white border border-white/10 hover:bg-dark-base hover:border-vantra/50",
     ghost: "bg-transparent text-white/70 hover:text-vantra hover:bg-white/5",
     outline: "border border-vantra text-vantra hover:bg-vantra hover:text-dark-900",
