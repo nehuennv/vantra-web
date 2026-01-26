@@ -73,7 +73,7 @@ const ConsultationForm = ({ preSelectedPlan }) => {
                 <Button
                     type="submit"
                     disabled={isLoading}
-                    className="w-full py-4 text-base font-bold text-black bg-[var(--product-primary)] hover:brightness-110 active:scale-[0.98] transition-all disabled:opacity-70 disabled:cursor-not-allowed group relative overflow-hidden"
+                    className="w-full py-4 text-base font-bold text-[color:var(--product-on-primary,#18181b)] bg-[var(--product-primary)] hover:brightness-110 active:scale-[0.98] transition-all disabled:opacity-70 disabled:cursor-not-allowed group relative overflow-hidden"
                     style={{ backgroundColor: 'var(--product-primary)' }}
                 >
                     <div className="relative z-10 flex items-center justify-center gap-2">

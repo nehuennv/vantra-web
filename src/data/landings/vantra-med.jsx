@@ -2,7 +2,8 @@ import DemoTriggerWrapper from '../../components/previews/DemoTriggerWrapper';
 
 export const vantraMedData = {
     theme: {
-        primary: '#0ea5e9', // Sky-500 (Celeste vibrante)
+        primary: '#38bdf8', // Sky-400 (Celeste más claro/suave)
+        onPrimary: '#ffffff', // White text on buttons
         secondary: '#ffffff'
     },
     hero: {

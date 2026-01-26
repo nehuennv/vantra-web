@@ -7,6 +7,7 @@ import PresentationSection from './sections/PresentationSection';
 import DemoSection from './sections/DemoSection';
 import PricingSection from './sections/PricingSection';
 import CTASection from './sections/CTASection';
+import Footer from '../layout/Footer';
 
 const ProductLandingTemplate = ({ data }) => {
     const { theme, hero, presentation, problem, solution, demo, pricing, cta } = data;
@@ -30,6 +31,7 @@ const ProductLandingTemplate = ({ data }) => {
             if (theme.primary && theme.primary.startsWith('#')) {
                 root.style.setProperty('--product-primary-rgb', hexToRgb(theme.primary));
             }
+            root.style.setProperty('--product-on-primary', theme.onPrimary || '#18181b');
         }
     }, [theme]);
 
@@ -115,6 +117,8 @@ const ProductLandingTemplate = ({ data }) => {
                 {pricing && <PricingSection data={pricing} theme={theme} />}
 
                 {cta && <CTASection data={cta} theme={theme} />}
+
+                <Footer />
 
             </div>
         </div>

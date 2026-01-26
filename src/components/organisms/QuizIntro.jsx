@@ -1,62 +1,76 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { MessageSquare, ArrowRight, Activity, Clock } from 'lucide-react';
 import Button from '../ui/Button';
-import { ArrowRight, CheckCircle2, Sparkles } from 'lucide-react';
 
-const QuizIntro = () => {
+const QuizIntro = ({ onStart }) => {
     return (
-        <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: 20 }}
-            transition={{ duration: 0.4, ease: "easeOut" }}
-            className="w-full h-full min-h-[480px] bg-zinc-900 border border-zinc-800 rounded-[24px] p-8 flex flex-col justify-between shadow-2xl shadow-black/50"
-        >
+        <div className="flex flex-col h-full justify-between">
+
+            {/* --- HEADER --- */}
             <div>
-                {/* Header */}
-                <div className="flex items-center gap-3 mb-6">
-                    <div className="w-10 h-10 rounded-full bg-zinc-800 flex items-center justify-center border border-zinc-700 text-[var(--product-primary)]">
-                        <Sparkles size={18} />
-                    </div>
-                    <h3 className="text-xl font-medium text-white">Verificación de Elegibilidad</h3>
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 mb-6">
+                    <span className="relative flex h-2 w-2">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--product-primary)] opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--product-primary)]"></span>
+                    </span>
+                    <span className="text-xs font-medium text-zinc-400 tracking-wide uppercase">Diagnóstico de Operatividad</span>
                 </div>
 
-                <p className="text-zinc-400 leading-relaxed mb-8">
-                    Nuestro sistema no es para todos. Buscamos trabajar con consultorios que ya tienen tracción y están listos para escalar sus operaciones mediante tecnología.
+                <h3 className="text-3xl font-display font-medium text-white mb-4 leading-tight">
+                    ¿Tu consultorio depende 100% de tu WhatsApp?
+                </h3>
+
+                <p className="text-zinc-400 text-sm leading-relaxed mb-8">
+                    En Vantra desarrollamos sistemas de previsibilidad. En menos de 2 minutos, vamos a identificar <strong>dónde se está perdiendo tiempo y dinero</strong> en tu operación diaria y qué sistema (A, B o C) necesitás para solucionarlo.
                 </p>
+            </div>
 
-                {/* Benefits / Points */}
-                <div className="space-y-4">
-                    <div className="flex gap-3">
-                        <CheckCircle2 className="shrink-0 text-[var(--product-primary)] mt-0.5" size={18} />
-                        <span className="text-sm text-zinc-300">Análisis rápido de tu infraestructura actual.</span>
+            {/* --- VISUAL CUES (Puntos de dolor) --- */}
+            <div className="space-y-4 mb-8">
+                <div className="p-4 rounded-xl bg-zinc-900/50 border border-zinc-800/50 flex items-start gap-4">
+                    <div className="mt-1 p-2 bg-zinc-950 rounded-lg border border-zinc-800 text-zinc-500">
+                        <Clock size={18} />
                     </div>
-                    <div className="flex gap-3">
-                        <CheckCircle2 className="shrink-0 text-[var(--product-primary)] mt-0.5" size={18} />
-                        <span className="text-sm text-zinc-300">Diagnóstico de puntos de fricción en la agenda.</span>
+                    <div>
+                        <p className="text-zinc-200 text-sm font-medium mb-1">Análisis de Tiempo</p>
+                        <p className="text-zinc-500 text-xs">Calculamos cuánto tiempo operativo podrías recuperar.</p>
                     </div>
-                    <div className="flex gap-3">
-                        <CheckCircle2 className="shrink-0 text-[var(--product-primary)] mt-0.5" size={18} />
-                        <span className="text-sm text-zinc-300">Estimación de potencial de automatización.</span>
+                </div>
+
+                <div className="p-4 rounded-xl bg-zinc-900/50 border border-zinc-800/50 flex items-start gap-4">
+                    <div className="mt-1 p-2 bg-zinc-950 rounded-lg border border-zinc-800 text-zinc-500">
+                        <Activity size={18} />
+                    </div>
+                    <div>
+                        <p className="text-zinc-200 text-sm font-medium mb-1">Escalabilidad</p>
+                        <p className="text-zinc-500 text-xs">Determinamos si estás listo para automatizar.</p>
                     </div>
                 </div>
             </div>
 
-            {/* CTA Button - Matches Form Button Alignment */}
-            <div className="w-full">
+            {/* --- CTA --- */}
+            <div className="mt-auto pt-6 border-t border-zinc-800">
                 <Button
-                    className="w-full py-4 text-base font-bold text-black bg-[var(--product-primary)] hover:brightness-110 active:scale-[0.98] transition-all group relative overflow-hidden"
-                    style={{ backgroundColor: 'var(--product-primary)' }}
+                    onClick={onStart} // Esta función la pasaremos luego para iniciar el quiz
+                    className="w-full h-14 text-base rounded-xl font-medium tracking-wide flex items-center justify-center gap-3 group"
+                    style={{
+                        backgroundColor: 'var(--product-primary)',
+                        color: '#000',
+                        border: 'none',
+                        // Sombra sutil en el color primario, nada de verde ácido
+                        boxShadow: '0 0 30px -10px var(--product-primary-opacity-30, rgba(14, 165, 233, 0.3))'
+                    }}
                 >
-                    <div className="relative z-10 flex items-center justify-center gap-2">
-                        <span>Comenzar Test de Elegibilidad</span>
-                        <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
-                    </div>
-                    <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 pointer-events-none blur-xl" />
+                    <MessageSquare size={18} fill="currentColor" className="opacity-80" />
+                    <span>Iniciar Diagnóstico</span>
+                    <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
                 </Button>
-                <p className="text-center text-xs text-zinc-500 mt-3">Te tomará menos de 2 minutos.</p>
+                <p className="text-center text-xs text-zinc-600 mt-3">
+                    Sin costo • Análisis inmediato • Privado
+                </p>
             </div>
-        </motion.div>
+        </div>
     );
 };
 

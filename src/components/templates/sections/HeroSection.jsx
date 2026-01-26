@@ -143,7 +143,7 @@ const HeroSection = ({ data }) => {
                                 onClick={cta.primary.action}
                                 onMouseEnter={() => setIsHighlighted(true)}
                                 onMouseLeave={() => setIsHighlighted(false)}
-                                className="group relative px-9 py-4 bg-[color:var(--product-primary)] text-black font-bold text-sm uppercase tracking-widest rounded-lg overflow-hidden transition-all duration-300 hover:scale-105 shadow-[0_0_20px_rgba(14,165,233,0.4)]"
+                                className="group relative px-9 py-4 bg-[color:var(--product-primary)] text-[color:var(--product-on-primary,#18181b)] font-bold text-sm uppercase tracking-widest rounded-lg overflow-hidden transition-all duration-300 hover:scale-105 shadow-[0_0_20px_rgba(14,165,233,0.4)]"
                             >
                                 <div className="relative z-10 flex items-center gap-3">
                                     {cta.primary.text} <ArrowRight size={18} />

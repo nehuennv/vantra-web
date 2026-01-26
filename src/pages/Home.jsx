@@ -10,16 +10,16 @@ import Footer from '../components/layout/Footer';
 
 const Home = () => {
   return (
-    <>
+    <div style={{ '--product-primary': '#EDF246' }}>
       <Hero />
-      <Services/>
+      <Services />
       <Ecosystem />
       <Differential />
       <PricingCarousel />
       <Meeting />
       <FAQ />
       <Footer />
-    </>
+    </div>
   );
 };
 

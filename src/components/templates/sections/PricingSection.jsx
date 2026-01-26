@@ -178,7 +178,7 @@ const PricingSection = ({ data }) => {
                                                     : (isHovered ? '#fff' : 'transparent'),
 
                                                 color: isHighlight
-                                                    ? '#000'
+                                                    ? 'var(--product-on-primary, #18181b)'
                                                     : (isHovered ? '#000' : '#fff'),
 
                                                 border: '1px solid',
