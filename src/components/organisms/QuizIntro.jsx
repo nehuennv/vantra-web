@@ -5,19 +5,11 @@ import Button from '../ui/Button';
 
 const QuizIntro = ({ onStart }) => {
     return (
-        <div className="flex flex-col h-full justify-between">
+        <div className="w-full h-full min-h-[480px] p-2 flex flex-col justify-between">
 
             {/* --- HEADER --- */}
             <div>
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 mb-6">
-                    <span className="relative flex h-2 w-2">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--product-primary)] opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--product-primary)]"></span>
-                    </span>
-                    <span className="text-xs font-medium text-zinc-400 tracking-wide uppercase">Diagnóstico de Operatividad</span>
-                </div>
-
-                <h3 className="text-3xl font-display font-medium text-white mb-4 leading-tight">
+                <h3 className="text-xl font-medium text-white mb-2">
                     ¿Tu consultorio depende 100% de tu WhatsApp?
                 </h3>
 
@@ -28,8 +20,8 @@ const QuizIntro = ({ onStart }) => {
 
             {/* --- VISUAL CUES (Puntos de dolor) --- */}
             <div className="space-y-4 mb-8">
-                <div className="p-4 rounded-xl bg-zinc-900/50 border border-zinc-800/50 flex items-start gap-4">
-                    <div className="mt-1 p-2 bg-zinc-950 rounded-lg border border-zinc-800 text-zinc-500">
+                <div className="p-4 rounded-xl bg-white/5 backdrop-blur-sm border border-white/5 flex items-start gap-4">
+                    <div className="mt-1 p-2 bg-zinc-950/50 rounded-lg border border-white/10 text-zinc-400">
                         <Clock size={18} />
                     </div>
                     <div>
@@ -38,8 +30,8 @@ const QuizIntro = ({ onStart }) => {
                     </div>
                 </div>
 
-                <div className="p-4 rounded-xl bg-zinc-900/50 border border-zinc-800/50 flex items-start gap-4">
-                    <div className="mt-1 p-2 bg-zinc-950 rounded-lg border border-zinc-800 text-zinc-500">
+                <div className="p-4 rounded-xl bg-white/5 backdrop-blur-sm border border-white/5 flex items-start gap-4">
+                    <div className="mt-1 p-2 bg-zinc-950/50 rounded-lg border border-white/10 text-zinc-400">
                         <Activity size={18} />
                     </div>
                     <div>
@@ -50,19 +42,18 @@ const QuizIntro = ({ onStart }) => {
             </div>
 
             {/* --- CTA --- */}
-            <div className="mt-auto pt-6 border-t border-zinc-800">
+            <div className="mt-auto">
                 <Button
                     onClick={onStart} // Esta función la pasaremos luego para iniciar el quiz
-                    className="w-full h-14 text-base rounded-xl font-medium tracking-wide flex items-center justify-center gap-3 group"
+                    className="w-full py-4 text-base font-bold text-white rounded-xl flex items-center justify-center gap-3 group active:scale-[0.98] transition-all relative overflow-hidden"
                     style={{
                         backgroundColor: 'var(--product-primary)',
-                        color: '#000',
+                        color: '#fff',
                         border: 'none',
                         // Sombra sutil en el color primario, nada de verde ácido
                         boxShadow: '0 0 30px -10px var(--product-primary-opacity-30, rgba(14, 165, 233, 0.3))'
                     }}
                 >
-                    <MessageSquare size={18} fill="currentColor" className="opacity-80" />
                     <span>Iniciar Diagnóstico</span>
                     <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
                 </Button>

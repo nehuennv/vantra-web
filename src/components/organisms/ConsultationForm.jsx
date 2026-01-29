@@ -9,8 +9,22 @@ const ConsultationForm = ({ preSelectedPlan }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         setIsLoading(true);
-        // Simulate network request
-        setTimeout(() => setIsLoading(false), 2000);
+
+        const formData = new FormData(e.target);
+        const service = formData.get('service');
+        const name = formData.get('name');
+        const email = formData.get('email');
+
+        const message = `Hola Vantra, me interesa recibir más información sobre *${service}*. \n\nSoy *${name}* y mi correo es: ${email}.`;
+
+        const encodedMessage = encodeURIComponent(message);
+        const whatsappUrl = `https://api.whatsapp.com/send/?phone=5491138830925&text=${encodedMessage}&type=phone_number&app_absent=0`;
+
+        // Simulate short loading for feedback then redirect
+        setTimeout(() => {
+            setIsLoading(false);
+            window.open(whatsappUrl, '_blank');
+        }, 1000);
     };
 
     const inputClasses = "w-full bg-zinc-950/50 border border-zinc-800 text-zinc-100 rounded-xl px-4 py-3.5 focus:border-[var(--product-primary)] focus:ring-1 focus:ring-[var(--product-primary)]/20 outline-none transition-all placeholder:text-zinc-600";
@@ -18,11 +32,12 @@ const ConsultationForm = ({ preSelectedPlan }) => {
 
     return (
         <motion.div
+            key={preSelectedPlan} // Re-mount when plan changes to update default values
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
             transition={{ duration: 0.4, ease: "easeOut" }}
-            className="w-full h-full min-h-[480px] bg-zinc-900 border border-zinc-800 rounded-[24px] p-8 flex flex-col shadow-2xl shadow-black/50"
+            className="w-full h-full min-h-[480px] p-2 flex flex-col"
         >
             <div className="mb-6">
                 <h3 className="text-xl font-medium text-white mb-2">Agenda tu Consultoría</h3>
@@ -35,9 +50,12 @@ const ConsultationForm = ({ preSelectedPlan }) => {
                     <label className={labelClasses}>Servicio de Interés</label>
                     <div className="relative">
                         <select
+                            name="service"
                             className={`${inputClasses} appearance-none cursor-pointer`}
-                            defaultValue={preSelectedPlan || "Sistema Completo"}
+                            defaultValue={preSelectedPlan || ""}
+                            required
                         >
+                            <option value="" disabled hidden className="text-zinc-500">Seleccioná un servicio...</option>
                             <option value="Gestión Interna">Gestión Interna</option>
                             <option value="Sistema Completo">Sistema Completo</option>
                             <option value="Automatización + Control">Automatización + Control</option>
@@ -51,19 +69,13 @@ const ConsultationForm = ({ preSelectedPlan }) => {
                 {/* Name */}
                 <div>
                     <label className={labelClasses}>Nombre Completo</label>
-                    <input type="text" placeholder="Dr. Juan Pérez" className={inputClasses} required />
+                    <input name="name" type="text" placeholder="Dr. Juan Pérez" className={inputClasses} required />
                 </div>
 
-                {/* Contact Info Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label className={labelClasses}>Email</label>
-                        <input type="email" placeholder="contacto@medico.com" className={inputClasses} required />
-                    </div>
-                    <div>
-                        <label className={labelClasses}>WhatsApp</label>
-                        <input type="tel" placeholder="+54 9 11..." className={inputClasses} required />
-                    </div>
+                {/* Contact Info */}
+                <div>
+                    <label className={labelClasses}>Email</label>
+                    <input name="email" type="email" placeholder="contacto@medico.com" className={inputClasses} required />
                 </div>
 
                 {/* Spacer to push button to bottom */}
@@ -73,7 +85,7 @@ const ConsultationForm = ({ preSelectedPlan }) => {
                 <Button
                     type="submit"
                     disabled={isLoading}
-                    className="w-full py-4 text-base font-bold text-[color:var(--product-on-primary,#18181b)] bg-[var(--product-primary)] hover:brightness-110 active:scale-[0.98] transition-all disabled:opacity-70 disabled:cursor-not-allowed group relative overflow-hidden"
+                    className="w-full py-4 text-base font-bold text-white bg-[var(--product-primary)] active:scale-[0.98] transition-all disabled:opacity-70 disabled:cursor-not-allowed group relative overflow-hidden"
                     style={{ backgroundColor: 'var(--product-primary)' }}
                 >
                     <div className="relative z-10 flex items-center justify-center gap-2">

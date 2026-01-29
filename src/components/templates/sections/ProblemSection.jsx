@@ -163,21 +163,7 @@ const ProblemSection = ({ data }) => {
                 )}
 
                 {/* --- QUOTE FINAL --- */}
-                {quote && (
-                    <motion.div
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: 0.3 }}
-                        className="mt-20 pt-10 border-t border-white/5 text-center"
-                    >
-                        <blockquote className="text-2xl md:text-3xl font-display font-light text-zinc-200 max-w-4xl mx-auto leading-tight">
-                            <span className="text-red-500 font-serif mr-1">"</span>
-                            {quote}
-                            <span className="text-red-500 font-serif ml-1">"</span>
-                        </blockquote>
-                    </motion.div>
-                )}
+
 
             </div>
         </section>

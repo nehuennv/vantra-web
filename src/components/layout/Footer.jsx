@@ -1,123 +1,130 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ArrowUpRight, Instagram, Linkedin, Send } from 'lucide-react';
+import { ArrowUpRight, Instagram, Linkedin, Mail, MapPin } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import LogoCompleto from '../../assets/logo/logo-completo.svg';
+import LogoSimple from '../../assets/logo/logo-simple.svg';
+import LogoFull from '../../assets/logo/logo-completo.svg';
 
 const Footer = () => {
     const currentYear = new Date().getFullYear();
 
     return (
-        <footer className="relative bg-black/20 backdrop-blur-3xl text-white overflow-hidden border-t border-white/5 pt-20">
+        <footer className="relative pt-32 pb-12 -mt-12 z-20">
 
-            {/* --- DECORATIVE GLOW --- */}
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] blur-[120px] rounded-full pointer-events-none opacity-50"
-                style={{ backgroundColor: 'var(--product-primary)', opacity: 0.1 }}
-            />
+            {/* --- SHEET CONTAINER (Glass Effect) --- */}
+            <div className="absolute inset-0 bg-[#08080A]/80 backdrop-blur-2xl border-t border-white/5 rounded-t-[60px] md:rounded-t-[80px] overflow-hidden shadow-2xl">
+
+                {/* 1. Background Logo Texture */}
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.03]">
+                    <img src={LogoFull} alt="" className="w-[80%] max-w-4xl grayscale brightness-150" />
+                </div>
+
+                {/* 2. Ambient Glows */}
+                <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-vantra-neon/5 rounded-full blur-[150px] -translate-y-1/2 translate-x-1/3" />
+                <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-vantra-ice/5 rounded-full blur-[150px] translate-y-1/3 -translate-x-1/4" />
+
+                {/* 3. Noise Overlay */}
+                <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10 mix-blend-overlay pointer-events-none" />
+            </div>
 
             <div className="container mx-auto px-6 relative z-10">
 
-                {/* 1. TOP CTA SECTION */}
-                <div className="flex flex-col md:flex-row items-center justify-between gap-10 mb-20 border-b border-white/10 pb-20">
-                    <div className="max-w-2xl text-center md:text-left">
-                        <h2 className="font-display font-normal text-4xl md:text-5xl lg:text-6xl text-white mb-6 leading-tight">
-                            ¿Listo para escalar <br />
-                            <span style={{ color: 'var(--product-primary)' }}>tu negocio?</span>
-                        </h2>
-                        <p className="text-gray-400 text-lg font-light leading-relaxed">
-                            Transformamos empresas con tecnología, diseño y estrategia. Agendá una reunión hoy mismo.
-                        </p>
-                    </div>
+                {/* --- TOP SECTION: BRAND & CTA --- */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 mb-20">
 
-                    <Link
-                        to="/configurar"
-                        className="group relative px-10 py-5 text-[color:var(--product-on-primary,#18181b)] font-medium text-lg rounded-xl overflow-hidden transition-all hover:scale-105 shrink-0"
-                        style={{
-                            backgroundColor: 'var(--product-primary)',
-                            boxShadow: '0 0 30px var(--product-primary-opacity-30, rgba(237,242,70,0.3))' // Fallback handled by CSS var if correctly set, else default
-                        }}
-                    >
-                        <div className="relative z-10 flex items-center gap-3">
-                            Comenzar Ahora <ArrowUpRight size={24} />
+                    {/* Left: Brand Voice */}
+                    <div className="flex flex-col justify-between space-y-12">
+                        <div>
+                            <img src={LogoSimple} alt="Vantra" className="w-12 h-12 invert brightness-0 opacity-80 mb-8" />
+                            <h2 className="text-4xl md:text-5xl lg:text-6xl font-display text-white leading-[1.1] tracking-tight">
+                                Construimos el <br />
+                                <span className="text-transparent bg-clip-text" style={{ backgroundImage: 'linear-gradient(180deg, #FFFFFF 0%, #EDF246 50%)', WebkitBackgroundClip: 'text' }}>futuro digital</span>
+                                <br /> de tu negocio.
+                            </h2>
                         </div>
-                        <div className="absolute inset-0 bg-white/40 skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-500" />
-                    </Link>
-                </div>
 
-                {/* 2. MAIN GRID */}
-                <div className="grid grid-cols-1 md:grid-cols-12 gap-12 lg:gap-20 mb-20">
-
-                    {/* BRANDING (Span 5 cols) */}
-                    <div className="md:col-span-5 flex flex-col items-start">
-                        <Link to="/" className="mb-8 block">
-                            <img src={LogoCompleto} alt="Vantra" className="h-10 w-auto" />
-                        </Link>
-                        <p className="text-gray-500 mb-8 max-w-sm leading-relaxed font-light">
-                            Agencia de desarrollo web y marketing digital. Creamos productos digitales que marcan la diferencia.
-                        </p>
-                        <div className="flex items-center gap-4">
-                            <a href="#" className="p-3 rounded-full bg-white/5 text-white hover:text-black transition-all duration-300"
-                                style={{ ':hover': { backgroundColor: 'var(--product-primary)' } }}
-                                onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'var(--product-primary)'; }}
-                                onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.05)'; }}
-                            >
-                                <Instagram size={20} />
-                            </a>
-                            <a href="#" className="p-3 rounded-full bg-white/5 text-white hover:text-black transition-all duration-300"
-                                onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'var(--product-primary)'; }}
-                                onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.05)'; }}
-                            >
-                                <Linkedin size={20} />
-                            </a>
-                            <a href="mailto:vantradigital@gmail.com" className="p-3 rounded-full bg-white/5 text-white hover:text-black transition-all duration-300"
-                                onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'var(--product-primary)'; }}
-                                onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.05)'; }}
-                            >
-                                <Send size={20} />
-                            </a>
+                        <div className="flex gap-4">
+                            <SocialIcon icon={Instagram} href="https://instagram.com/vantradigital" />
+                            <SocialIcon icon={Linkedin} href="https://linkedin.com/company/vantradigital" />
+                            <SocialIcon icon={Mail} href="mailto:vantradigital@gmail.com" />
                         </div>
                     </div>
 
-                    {/* LINKS COLUMN 1 (Span 2) */}
-                    <div className="md:col-span-2 md:col-start-7">
-                        <h4 className="text-white font-normal text-lg mb-6">Explorar</h4>
-                        <ul className="space-y-4">
-                            <li><Link to="/" className="text-gray-400 hover:text-[color:var(--product-primary)] transition-colors">Inicio</Link></li>
-                            <li><Link to="/servicios" className="text-gray-400 hover:text-[color:var(--product-primary)] transition-colors">Servicios</Link></li>
-                            <li><a href="#ecosystem" className="text-gray-400 hover:text-[color:var(--product-primary)] transition-colors">Ecosistema</a></li>
-                            <li><Link to="/configurar" className="text-gray-400 hover:text-[color:var(--product-primary)] transition-colors">Contacto</Link></li>
-                        </ul>
-                    </div>
+                    {/* Right: Navigation & Action */}
+                    <div className="flex flex-col gap-12 lg:pl-12 border-l border-white/5 lg:border-none">
 
-                    {/* LINKS COLUMN 2 (Span 2) */}
-                    <div className="md:col-span-2">
-                        <h4 className="text-white font-normal text-lg mb-6">Productos</h4>
-                        <ul className="space-y-4">
-                            <li><Link to="/resto" className="text-gray-400 hover:text-[color:var(--product-primary)] transition-colors">Vantra Resto</Link></li>
-                            <li><Link to="/med" className="text-gray-400 hover:text-[color:var(--product-primary)] transition-colors">Vantra Med</Link></li>
-                        </ul>
-                    </div>
+                        {/* Navigation Links Grid */}
+                        <div className="grid grid-cols-2 gap-8">
+                            <div className="flex flex-col gap-4">
+                                <h4 className="font-display text-lg text-white/40 mb-2">Explorar</h4>
+                                <NavLink to="/">Inicio</NavLink>
+                                <button onClick={() => document.getElementById('unified-services')?.scrollIntoView({ behavior: 'smooth' })} className="group flex items-center gap-2 text-white/60 hover:text-white transition-colors duration-300 w-fit text-left">
+                                    <span className="text-lg font-light">Servicios</span>
+                                </button>
+                                <NavLink to="/equipo">Equipo</NavLink>
+                            </div>
+                            <div className="flex flex-col gap-4">
+                                <h4 className="font-display text-lg text-white/40 mb-2">Vantra</h4>
+                                <NavLink to="/resto">Vantra Resto</NavLink>
+                                <NavLink to="/med">Vantra Med</NavLink>
+                                <NavLink to="/contacto">Contacto</NavLink>
+                            </div>
+                        </div>
 
-                    {/* LINKS COLUMN 3 (Span 2) */}
-                    <div className="md:col-span-2">
-                        <h4 className="text-white font-normal text-lg mb-6">Legal</h4>
-                        <ul className="space-y-4">
-                            <li><Link to="/privacidad" className="text-gray-400 hover:text-[color:var(--product-primary)] transition-colors">Privacidad</Link></li>
-                            <li><Link to="/terminos" className="text-gray-400 hover:text-[color:var(--product-primary)] transition-colors">Términos</Link></li>
-                        </ul>
+                        {/* Direct Contact Card */}
+                        <div
+                            className="mt-auto p-8 rounded-2xl bg-white/[0.02] border border-white/5 backdrop-blur-sm hover:bg-white/[0.04] transition-all duration-300 group cursor-pointer"
+                            onClick={() => {
+                                const contactSection = document.getElementById('contacto');
+                                if (contactSection) contactSection.scrollIntoView({ behavior: 'smooth' });
+                            }}
+                        >
+                            <div className="flex items-center justify-between mb-4">
+                                <span className="text-white/60 text-sm font-light">¿Tienes un proyecto?</span>
+                                <ArrowUpRight className="text-vantra-neon group-hover:rotate-45 transition-transform duration-500" size={20} />
+                            </div>
+                            <p className="text-2xl text-white font-medium group-hover:text-vantra-neon transition-colors duration-300">Escríbenos</p>
+                        </div>
+
                     </div>
                 </div>
 
-                {/* 3. BOTTOM BAR */}
-                <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-                    <p className="text-sm text-gray-600">
-                        &copy; {currentYear} Vantra Inc. Todos los derechos reservados.
-                    </p>
+                {/* --- DIVIDER --- */}
+                <div className="w-full h-px bg-white/10 mb-8" />
+
+                {/* --- BOTTOM SECTION: COPYRIGHT & LEGAL --- */}
+                <div className="flex flex-col md:flex-row justify-between items-center gap-6 text-sm text-white/30 font-light">
+                    <p>© {currentYear} Vantra Inc. All rights reserved.</p>
+
+                    <div className="flex items-center gap-2">
+                        <MapPin size={14} className="text-vantra-neon/50" />
+                        <span>Buenos Aires • Global</span>
+                    </div>
                 </div>
 
             </div>
         </footer>
     );
 };
+
+// --- HELPER COMPONENTS ---
+
+const NavLink = ({ to, children }) => (
+    <Link to={to} className="group flex items-center gap-2 text-white/60 hover:text-white transition-colors duration-300 w-fit">
+        <span className="text-lg font-light">{children}</span>
+        <ArrowUpRight size={14} className="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 text-vantra-neon" />
+    </Link>
+);
+
+const SocialIcon = ({ icon: Icon, href }) => (
+    <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center text-white/60 hover:text-black hover:bg-vantra-neon hover:border-vantra-neon transition-all duration-300"
+    >
+        <Icon size={20} />
+    </a>
+);
 
 export default Footer;

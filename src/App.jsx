@@ -12,6 +12,7 @@ import SmoothScroll from './components/layout/SmoothScroll';
 
 import { AnimatePresence } from 'framer-motion';
 import SplashScreen from './components/layout/SplashScreen';
+import PageTransition from './components/layout/PageTransition';
 
 // Un componente auxiliar para hacer scroll al top al cambiar de ruta
 const ScrollToTop = () => {
@@ -35,44 +36,75 @@ function App() {
     <Router>
       <SmoothScroll> {/* 1. Motor de Scroll (Lenis) */}
 
+        {/* Splash Screen Logic separated from Routes */}
         <AnimatePresence mode="wait">
           {isLoading && (
             <SplashScreen key="splash" onComplete={() => setIsLoading(false)} />
           )}
         </AnimatePresence>
 
-        <GlobalCursor /> {/* Cursor Custom "Supreme Tech" */}
-        <ScrollToTop /> {/* Reset del scroll al navegar */}
+        {!isLoading && (
+          <>
+            <GlobalCursor />
+            <ScrollToTop />
+            <GlobalAuroraBackground />
+            <GlobalSpotlight />
 
-        {/* 2. El Fondo Global "Aurora" (Unified Gradient) */}
-        {!isLoading && <GlobalAuroraBackground />}
-
-        {/* 3. Global Spotlight (Mouse Hover Effect) */}
-        {!isLoading && <GlobalSpotlight />}
-
-        {/* 4. El Contenido (Transparente para dejar ver el fondo) */}
-        <div className="min-h-screen font-sans relative text-white selection:bg-[#EDF246] selection:text-black w-full overflow-x-hidden">
-
-          <Navbar />
-
-          <main className="relative z-10">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/resto" element={<RestoProduct />} />
-              <Route path="/med" element={<MedProduct />} />
-              <Route path="/equipo" element={<Team />} />
-
-              {/* Rutas adicionales (Configuración, etc) */}
-              <Route path="/configurar" element={<div className="pt-32 text-center">Configurador en construcción...</div>} />
-              <Route path="/servicios" element={<div className="pt-32 text-center">Sección de Servicios (Scroll en Home)</div>} />
-            </Routes>
-          </main>
-
-        </div>
+            <div className="min-h-screen font-sans relative text-white selection:bg-[#EDF246] selection:text-black w-full overflow-x-hidden">
+              <Navbar />
+              <main className="relative z-10">
+                <AnimatedRoutes />
+              </main>
+            </div>
+          </>
+        )}
 
       </SmoothScroll>
     </Router>
   );
 }
+
+// Separate component to use useLocation hook
+const AnimatedRoutes = () => {
+  const location = useLocation();
+
+  return (
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
+        <Route path="/" element={
+          <PageTransition>
+            <Home />
+          </PageTransition>
+        } />
+        <Route path="/resto" element={
+          <PageTransition>
+            <RestoProduct />
+          </PageTransition>
+        } />
+        <Route path="/med" element={
+          <PageTransition>
+            <MedProduct />
+          </PageTransition>
+        } />
+        <Route path="/equipo" element={
+          <PageTransition>
+            <Team />
+          </PageTransition>
+        } />
+        <Route path="/configurar" element={
+          <PageTransition>
+            <div className="pt-32 text-center">Configurador en construcción...</div>
+          </PageTransition>
+        } />
+        <Route path="/servicios" element={
+          <PageTransition>
+            <div className="pt-32 text-center">Sección de Servicios (Scroll en Home)</div>
+          </PageTransition>
+        } />
+      </Routes>
+    </AnimatePresence>
+  );
+};
+
 
 export default App;

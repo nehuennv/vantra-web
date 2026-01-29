@@ -3,62 +3,62 @@ import { motion } from 'framer-motion';
 import { Linkedin } from 'lucide-react';
 import Footer from '../components/layout/Footer';
 
+import serafinImg from '../assets/team/Serafin Bastianelli - CEO & Founder.webp';
+import pedroImg from '../assets/team/Pedro Reverendo - CTO & Ai Developer.webp';
+import nehuenImg from '../assets/team/Nehuen Villavicencio - FrontEnd Developer.webp';
+import noNameImg from '../assets/team/No Name Report - CMO & Video Editor.webp';
+import martinaImg from '../assets/team/Martina Pasucci - Community Manager.webp';
+import morenaImg from '../assets/team/Morena Sanchez - Community Manager.webp';
+import tomasImg from '../assets/team/Tomás Actis - Graphic Designer.webp';
+
 // --- DATA (9 Personas) ---
 const TEAM = [
     {
         id: 1,
         name: 'Serafin Bastianelli',
         role: 'CEO & Founder',
-        image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1000&auto=format&fit=crop'
+        image: serafinImg,
+        linkedin: 'https://www.linkedin.com/in/serafinbastianelli/'
     },
     {
         id: 2,
-        name: 'Sofia Chen',
-        role: 'CTO',
-        image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=1000&auto=format&fit=crop'
+        name: 'Pedro Reverendo',
+        role: 'CTO & Ai Developer',
+        image: pedroImg,
+        linkedin: 'https://www.linkedin.com/in/pedroreverendo/'
     },
     {
         id: 3,
-        name: 'Marcus Thorn',
-        role: 'Producto',
-        image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=1000&auto=format&fit=crop'
-    },
-    {
-        id: 4,
-        name: 'Elena Vossen',
-        role: 'Diseño',
-        image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=1000&auto=format&fit=crop'
+        name: 'Nehuen Villavicencio',
+        role: 'Frontend Developer',
+        image: nehuenImg,
+        linkedin: 'https://www.linkedin.com/in/nehuenvillavicencio/'
     },
     {
         id: 5,
-        name: 'David Kim',
-        role: 'Desarrollo',
-        image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=1000&auto=format&fit=crop'
+        name: 'Martina Pasucci',
+        role: 'Community Manager',
+        image: martinaImg
     },
     {
         id: 6,
-        name: 'Sarah O\'Connell',
-        role: 'UX/UI',
-        image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=1000&auto=format&fit=crop'
+        name: 'Morena Sanchez',
+        role: 'Community Manager',
+        image: morenaImg
     },
     {
         id: 7,
-        name: 'Lucas Silva',
-        role: 'Marketing',
-        image: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=1000&auto=format&fit=crop'
+        name: 'Tomas Actis',
+        role: 'Graphic Designer',
+        image: tomasImg
     },
     {
-        id: 8,
-        name: 'Priya Patel',
-        role: 'Datos',
-        image: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?q=80&w=1000&auto=format&fit=crop'
+        id: 4,
+        name: 'No Name Report',
+        role: 'CMO & Video Editor',
+        image: noNameImg
     },
-    {
-        id: 9,
-        name: 'Tom Hiddleston',
-        role: 'Soporte',
-        image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=1000&auto=format&fit=crop'
-    }
+
 ];
 
 // --- CASCADA DE ENTRADA ---
@@ -124,70 +124,108 @@ const Team = () => {
                     initial="hidden"
                     whileInView="visible"
                     viewport={{ once: true, margin: "-50px" }}
-                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
+                    className="flex flex-wrap justify-center gap-8"
                 >
                     {TEAM.map((member) => (
-                        <MemberCard key={member.id} member={member} />
+                        <div key={member.id} className="w-full sm:w-[calc(50%-2rem)] lg:w-[calc(33.33%-2rem)] max-w-sm">
+                            <MemberCard member={member} />
+                        </div>
                     ))}
                 </motion.div>
 
             </div>
 
             <Footer />
-        </div>
+        </div >
     );
 };
 
 // --- LA CARD (DISEÑO REVERSIONADO) ---
 const MemberCard = ({ member }) => {
+    const isCMO = member.role.includes('CMO'); // Detectamos al CMO Misterioso
+
     return (
         <motion.div
             variants={cardVariants}
-            className="group relative w-full aspect-square bg-[#0a0a0a] rounded-xl overflow-hidden cursor-pointer"
+            className={`group relative w-full aspect-square bg-[#050505] rounded-xl overflow-hidden cursor-pointer ${isCMO ? 'ring-1 ring-white/10' : ''}`}
         >
             {/* 1. BORDE QUE SE ENCIENDE (Glow Border) */}
-            {/* Estado normal: Borde gris sutil. Hover: Borde amarillo brillante */}
-            <div className="absolute inset-0 rounded-xl border-2 border-white/10 group-hover:border-[#EDF246] transition-colors duration-300 z-20 pointer-events-none" />
+            <div
+                className={`absolute inset-0 rounded-xl border-2 transition-all duration-200 z-20 pointer-events-none
+                    ${isCMO
+                        ? 'border-white/20 group-hover:border-[#EDF246] group-hover:shadow-[0_0_40px_rgba(237,242,70,0.5)]'
+                        : 'border-white/10 group-hover:border-[#EDF246]'
+                    }
+                `}
+            />
 
             {/* 2. IMAGEN */}
-            <div className="absolute inset-0">
+            <div className={`absolute inset-0 bg-black ${isCMO ? 'overflow-hidden' : ''}`}>
                 <img
                     src={member.image}
                     alt={member.name}
-                    className="
+                    className={`
                         w-full h-full object-cover 
-                        filter grayscale
-                        group-hover:grayscale-0 
                         transition-all duration-500 ease-in-out
-                        group-hover:scale-110
-                    "
+                        ${isCMO
+                            ? 'opacity-30 blur-xl grayscale contrast-200 scale-125 group-hover:opacity-100 group-hover:blur-0 group-hover:scale-100 group-hover:grayscale-0'
+                            : 'grayscale group-hover:grayscale-0 group-hover:scale-110'
+                        }
+                    `}
                 />
-                {/* Overlay oscuro abajo para leer el texto */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-80" />
+
+                {/* Overlay oscuro */}
+                <div className={`absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent ${isCMO ? 'opacity-100 group-hover:opacity-20' : 'opacity-80'} transition-opacity duration-500`} />
+
+                {/* --- CMO SPECIAL EFFECTS --- */}
+                {isCMO && (
+                    <>
+                        {/* Static Noise Overlay (TV Glitch) */}
+                        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-40 group-hover:opacity-10 transition-opacity duration-100 pointer-events-none mix-blend-difference" />
+
+                        {/* Giant Question Mark (Vantra Yellow) */}
+                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none group-hover:opacity-0 transition-opacity duration-200">
+                            <span className="text-9xl font-display font-bold text-[#EDF246] opacity-20 animate-pulse tracking-tighter">?</span>
+                        </div>
+                    </>
+                )}
             </div>
 
             {/* 3. INFO (Siempre Visible) */}
             <div className="absolute bottom-0 left-0 w-full p-6 z-30">
                 <div className="flex justify-between items-end">
                     <div>
-                        {/* ROL (Amarillo Vantra) */}
-                        <p className="text-[#EDF246] text-xs uppercase tracking-widest mb-1 font-bold">
-                            {member.role}
-                        </p>
-                        {/* NOMBRE (Blanco) */}
-                        <h3 className="text-2xl font-display text-white group-hover:text-white transition-colors">
+                        {/* ROL */}
+                        <div className={`mb-2 inline-block ${isCMO ? 'bg-[#EDF246] px-1 transform -skew-x-12' : ''}`}>
+                            <p className={`text-xs uppercase tracking-widest font-bold ${isCMO ? 'text-black font-mono transform skew-x-12' : 'text-[#EDF246]'}`}>
+                                {member.role}
+                            </p>
+                        </div>
+
+                        {/* NOMBRE */}
+                        <h3 className={`text-2xl font-display text-white transition-colors ${isCMO ? 'group-hover:text-[#EDF246] group-hover:underline decoration-wavy decoration-[#EDF246]' : 'group-hover:text-white'}`}>
                             {member.name}
                         </h3>
                     </div>
 
-                    {/* LINKEDIN ICON (Solo aparece sutilmente o se ilumina) */}
-                    <div className="p-2 rounded-lg bg-white/10 text-white group-hover:bg-[#EDF246] group-hover:text-black transition-all duration-300">
-                        <Linkedin size={20} />
-                    </div>
+                    {/* ICON (Linkedin o Alien si es CMO) */}
+                    {member.linkedin && (
+                        <a
+                            href={member.linkedin}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={`p-2 rounded-lg text-white transition-all duration-300 inline-block
+                                ${isCMO
+                                    ? 'bg-white/10 group-hover:bg-[#EDF246] group-hover:text-black hover:shadow-[0_0_20px_#EDF246]'
+                                    : 'bg-white/10 group-hover:bg-[#EDF246] group-hover:text-black'
+                                }`}
+                        >
+                            <Linkedin size={20} className={isCMO ? 'group-hover:animate-ping' : ''} />
+                        </a>
+                    )}
                 </div>
             </div>
 
-            {/* 4. EFECTO DE LUZ AMBIENTAL EN HOVER */}
 
 
         </motion.div>

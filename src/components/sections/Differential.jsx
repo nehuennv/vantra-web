@@ -1,105 +1,91 @@
 import React from 'react';
-import { Zap, TrendingUp, Users, HeartHandshake, ArrowRight } from 'lucide-react';
+import { Zap, TrendingUp, Users, HeartHandshake, ArrowRight, Sparkles } from 'lucide-react';
 import { motion } from 'framer-motion';
+import Card from '../ui/Card'; // Reutilizamos tu componente Premium
+import { cn } from '../../lib/utils';
 
 const pillars = [
-    {
-        icon: Zap,
-        title: "Velocidad de ejecución",
-        desc: "Proyectos en producción en semanas, no meses. Metodología ágil con entregas iterativas."
-    },
+
     {
         icon: TrendingUp,
-        title: "ROI medible y visible",
-        desc: "Dashboards en tiempo real. Cada peso invertido se traduce en métricas concretas."
+        title: "ROI Obsesivo",
+        desc: "No vendemos humo. Construimos dashboards que te muestran exactamente cuánto dinero te está ahorrando el software."
     },
     {
         icon: Users,
-        title: "Equipo integrado",
-        desc: "Nos metemos en tu negocio como si fuera nuestro. Estrategia, desarrollo y ejecución bajo un mismo techo."
+        title: "Tu Brazo Tecnológico",
+        desc: "Dejamos de ser 'proveedores' para ser socios. Nos integramos en tu Slack, en tus dailies y en tu visión."
     },
     {
         icon: HeartHandshake,
-        title: "Soporte estratégico",
-        desc: "Más que asistencia técnica: acompañamiento continuo para optimizar y escalar tus resultados."
+        title: "Escalabilidad Infinita",
+        desc: "Código limpio y modular. Cuando tu negocio crezca x10, nuestro software no va a necesitar ser reescrito."
+    },
+    {
+        icon: Zap,
+        title: "Velocidad Extrema",
+        title: "Velocidad Extrema",
+        desc: "Sistemas optimizados para cargar en milisegundos. Porque cada segundo de espera es un cliente perdido."
     }
 ];
 
-const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-        opacity: 1,
-        transition: { staggerChildren: 0.1 }
-    }
-};
-
-const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-        y: 0,
-        opacity: 1,
-        transition: { type: "spring", stiffness: 50 }
-    }
-};
-
 const Differential = () => {
     return (
-        <section className="relative py-24 bg-transparent">
-            {/* Grid background subtle effect */}
-            <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_10%,transparent_100%)] pointer-events-none -z-10" />
+        <section className="relative py-12">
+            {/* Background Ambient Light */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#EDF246]/5 rounded-full blur-[120px] pointer-events-none -z-10" />
 
-            <div className="container mx-auto px-6">
+            <div className="container mx-auto px-6 relative z-10">
 
-                {/* Header */}
+                {/* Header Section */}
+                <div className="mb-24 md:text-center max-w-4xl mx-auto">
+
+
+                    <h2 className="font-display text-5xl md:text-7xl text-white mb-8 leading-[0.9] tracking-tight">
+                        No somos una agencia. <br />
+                        <span className="inline-block text-transparent bg-clip-text" style={{ backgroundImage: 'linear-gradient(180deg, #FFFFFF 0%, #EDF246 40%)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>Somos ingeniería pura.</span>
+                    </h2>
+                    <p className="text-xl text-gray-400 font-sans font-light max-w-2xl mx-auto leading-relaxed">
+                        El código es un commodity. La estrategia detrás del código es lo que te hace ganar mercado.
+                    </p>
+                </div>
+
+                {/* Pillars Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 ">
+                    {pillars.map((pillar, index) => (
+                        <Card
+                            key={index}
+                            className="p-8 group h-full flex flex-col justify-between hover:border-[#EDF246]/30 transition-colors duration-500"
+                            hover={true}
+                        >
+                            <div>
+                                {/* Icon Container with Neon Glow on Hover */}
+                                <div className="mb-8 w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-white group-hover:bg-[#EDF246] group-hover:text-black group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-[0_0_0_0_rgba(237,242,70,0)] group-hover:shadow-[0_0_20px_0_rgba(237,242,70,0.4)]">
+                                    <pillar.icon size={32} strokeWidth={1.5} />
+                                </div>
+
+                                <h3 className="font-display text-2xl text-white mb-4 group-hover:text-[#EDF246] transition-colors">
+                                    {pillar.title}
+                                </h3>
+                                <p className="text-gray-400 leading-relaxed text-sm group-hover:text-gray-300 transition-colors">
+                                    {pillar.desc}
+                                </p>
+                            </div>
+
+
+                        </Card>
+                    ))}
+                </div>
+
+                {/* Bottom CTA Disruptivo */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    transition={{ duration: 0.8 }}
-                    className="mb-20 md:text-center max-w-3xl mx-auto"
+                    className="flex justify-center"
                 >
-                    <h2 className="font-display text-4xl md:text-5xl lg:text-6xl text-white mb-6 leading-tight">
-                        Nuestra ventaja diferencial. <span className="text-gray-500">Por qué VANTRA es tu mejor decisión.</span>
-                    </h2>
-                    <p className="text-xl text-gray-400 font-light">
-                        No somos una agencia más. Somos el equipo técnico y estratégico que te faltaba.
-                    </p>
-                </motion.div>
 
-                {/* Pillars Grid */}
-                <motion.div
-                    variants={containerVariants}
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true, margin: "-50px" }}
-                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-20"
-                >
-                    {pillars.map((pillar, index) => (
-                        <motion.div
-                            key={index}
-                            variants={itemVariants}
-                            className="group p-8 rounded-2xl border border-white/5 bg-white/[0.01] hover:bg-white/[0.03] transition-colors duration-300"
-                        >
-                            <div className="mb-6 inline-flex p-4 rounded-xl bg-[#EDF246]/10 text-[#EDF246] group-hover:scale-110 transition-transform duration-300">
-                                <pillar.icon size={32} strokeWidth={1.5} />
-                            </div>
-                            <h3 className="font-display text-xl text-white mb-4 group-hover:text-[#EDF246] transition-colors">
-                                {pillar.title}
-                            </h3>
-                            <p className="text-gray-400 leading-relaxed text-sm">
-                                {pillar.desc}
-                            </p>
-                        </motion.div>
-                    ))}
                 </motion.div>
-
-                {/* Bottom CTA */}
-                <div className="text-center">
-                    <a href="#" className="inline-flex items-center gap-3 text-white font-display text-lg hover:text-[#EDF246] transition-colors border-b border-transparent hover:border-[#EDF246] pb-1">
-                        ¿Listo para llevar tu negocio al siguiente nivel? Hablemos de tu proyecto
-                        <ArrowRight size={20} />
-                    </a>
-                </div>
 
             </div>
         </section>

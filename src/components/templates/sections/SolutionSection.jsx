@@ -1,14 +1,14 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, Suspense, lazy, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageCircle, Calendar, Database, TrendingUp } from 'lucide-react';
+import { MessageCircle, Calendar, Database, TrendingUp, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
 
-// Importar componentes visuales modulares
-import VisualCapture from '../../visuals/VisualCapture';
-import VisualContext from '../../visuals/VisualContext';
-import VisualAction from '../../visuals/VisualAction';
-import VisualGrowth from '../../visuals/VisualGrowth';
+// --- LAZY LOADED COMPONENTS ---
+const VisualCapture = lazy(() => import('../../visuals/VisualCapture'));
+const VisualContext = lazy(() => import('../../visuals/VisualContext'));
+const VisualAction = lazy(() => import('../../visuals/VisualAction'));
+const VisualGrowth = lazy(() => import('../../visuals/VisualGrowth'));
 
-// --- CONFIGURACIÓN DE DATOS ---
+// --- FEATURES DATA ---
 const features = [
     {
         id: 'capture',
@@ -16,7 +16,7 @@ const features = [
         description: "El sistema lee el chat de WhatsApp y extrae los datos del paciente automáticamente. Sin formularios manuales, sin errores de tipeo.",
         icon: MessageCircle,
         color: "#10B981", // Emerald soft
-        visual: "VisualCapture"
+        Component: VisualCapture
     },
     {
         id: 'context',
@@ -24,7 +24,7 @@ const features = [
         description: "Antes de que el paciente llegue, ya sabes todo. Visualiza visitas anteriores, cobertura médica y notas clínicas en un solo vistazo.",
         icon: Database,
         color: "#3B82F6", // Blue soft
-        visual: "VisualContext"
+        Component: VisualContext
     },
     {
         id: 'action',
@@ -32,7 +32,7 @@ const features = [
         description: "Visualiza tu día en una lista clara. El sistema organiza los turnos, marca confirmaciones y detecta huecos automáticamente.",
         icon: Calendar,
         color: "#8B5CF6", // Violet soft
-        visual: "VisualAction"
+        Component: VisualAction
     },
     {
         id: 'growth',
@@ -40,138 +40,247 @@ const features = [
         description: "Entiende tu clínica. Analiza tasas de ausentismo y descubre por qué canal llegan tus pacientes (Instagram, Google, Recomendación).",
         icon: TrendingUp,
         color: "#F59E0B", // Amber soft
-        visual: "VisualGrowth"
+        Component: VisualGrowth
     }
 ];
 
-// --- COMPONENTE PRINCIPAL (CARRUSEL REFINADO) ---
+const AUTOPLAY_DURATION = 10000;
+const MANUAL_PAUSE_DURATION = 60000;
+
+// --- TIMER HOOK ---
+const useCarouselTimer = (duration, activeIndex, onComplete, isManualOverride) => {
+    const [progress, setProgress] = useState(0);
+    const startTimeRef = useRef(new Date().getTime());
+    const pausedRef = useRef(false);
+    const elapsedRef = useRef(0);
+    const reqRef = useRef(null);
+
+    useEffect(() => {
+        setProgress(0);
+        elapsedRef.current = 0;
+        startTimeRef.current = new Date().getTime();
+        pausedRef.current = false;
+    }, [activeIndex, isManualOverride]);
+
+    useEffect(() => {
+        if (isManualOverride) return;
+
+        const animate = () => {
+            if (pausedRef.current) {
+                startTimeRef.current = new Date().getTime() - elapsedRef.current;
+                reqRef.current = requestAnimationFrame(animate);
+                return;
+            }
+
+            const now = new Date().getTime();
+            elapsedRef.current = now - startTimeRef.current;
+            const newProgress = Math.min((elapsedRef.current / duration) * 100, 100);
+
+            setProgress(newProgress);
+
+            if (newProgress < 100) {
+                reqRef.current = requestAnimationFrame(animate);
+            } else {
+                onComplete();
+            }
+        };
+
+        reqRef.current = requestAnimationFrame(animate);
+        return () => cancelAnimationFrame(reqRef.current);
+    }, [duration, onComplete, isManualOverride, activeIndex]);
+
+    return {
+        progress,
+        setPaused: (p) => { pausedRef.current = p; }
+    };
+};
+
+// --- COMPONENTE PRINCIPAL ---
 const SolutionSection = () => {
     const [activeIndex, setActiveIndex] = useState(0);
-    const timerRef = useRef(null);
-    const DURATION = 10000;
+    const [direction, setDirection] = useState(0);
+    const [isManualOverride, setIsManualOverride] = useState(false);
 
-    // Timer Logic Optimizado
-    useEffect(() => {
-        timerRef.current = setTimeout(() => {
-            setActiveIndex((prev) => (prev + 1) % features.length);
-        }, DURATION);
-        return () => { if (timerRef.current) clearTimeout(timerRef.current); };
-    }, [activeIndex]);
+    // Auto-advance Logic
+    const nextSlide = useCallback(() => {
+        setDirection(1);
+        setActiveIndex((prev) => (prev + 1) % features.length);
+    }, []);
 
-    const handleSelect = (index) => {
-        setActiveIndex(index);
-        if (timerRef.current) clearTimeout(timerRef.current);
+    // Timer Hook
+    const timer = useCarouselTimer(AUTOPLAY_DURATION, activeIndex, nextSlide, isManualOverride);
+
+    // Manual Controls
+    const activateManual = () => {
+        setIsManualOverride(true);
+        setTimeout(() => setIsManualOverride(false), MANUAL_PAUSE_DURATION);
     };
 
-    const handleKeyDown = (e, index) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            handleSelect(index);
-        }
+    const handleDotClick = (index) => {
+        activateManual();
+        setDirection(index > activeIndex ? 1 : -1);
+        setActiveIndex(index);
+    };
+
+    const handlePrev = () => {
+        activateManual();
+        setDirection(-1);
+        setActiveIndex((prev) => (prev - 1 + features.length) % features.length);
+    };
+
+    const handleNext = () => {
+        activateManual();
+        setDirection(1);
+        setActiveIndex((prev) => (prev + 1) % features.length);
+    };
+
+    // Keyboard
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if (e.key === 'ArrowLeft') handlePrev();
+            if (e.key === 'ArrowRight') handleNext();
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [activeIndex]);
+
+    const currentFeature = features[activeIndex];
+
+    // Variants refined for elegance
+    const textVariants = {
+        enter: { opacity: 0, y: 10 },
+        center: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } },
+        exit: { opacity: 0, y: -10, transition: { duration: 0.2, ease: "easeIn" } }
+    };
+
+    const visualVariants = {
+        enter: { opacity: 0, scale: 0.98 },
+        center: { opacity: 1, scale: 1, transition: { duration: 0.5, ease: "easeOut" } },
+        exit: { opacity: 0, scale: 1.02, transition: { duration: 0.3, ease: "easeIn" } }
     };
 
     return (
-        <section className="py-24 w-full font-sans">
-            <div className="container mx-auto max-w-7xl px-4 md:px-6">
+        <section
+            className="w-full font-sans relative overflow-hidden flex flex-col justify-center py-0"
+            onMouseEnter={() => timer.setPaused(true)}
+            onMouseLeave={() => timer.setPaused(false)}
+            onTouchStart={() => timer.setPaused(true)}
+            onTouchEnd={() => timer.setPaused(false)}
+        >
+            <div className="container mx-auto max-w-7xl px-4 md:px-6 relative z-10 flex-grow flex flex-col justify-center">
 
-                {/* Header Section Minimalista */}
-                <div className="mb-16 md:mb-24">
-                    <h2 className="text-4xl md:text-5xl font-medium text-white mb-6 tracking-tight leading-tight">
-                        Todo el flujo de tu clínica,<br />
-                        <span className="text-zinc-500">en piloto automático.</span>
-                    </h2>
-                </div>
+                {/* CONTENT GRID */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center min-h-[600px]">
 
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-start h-auto lg:min-h-[600px]">
-
-                    {/* LISTA IZQUIERDA (CARRUSEL) */}
-                    <div className="lg:col-span-5 flex flex-col gap-3">
-                        {features.map((feature, index) => {
-                            const isActive = activeIndex === index;
-                            return (
-                                <button
-                                    key={feature.id}
-                                    onClick={() => handleSelect(index)}
-                                    onKeyDown={(e) => handleKeyDown(e, index)}
-                                    style={isActive ? {
-                                        boxShadow: `0 0 40px -10px ${feature.color}20`,
-                                        borderColor: `${feature.color}60`
-                                    } : {}}
-                                    className={`
-                                        group relative p-6 rounded-2xl cursor-pointer transition-all duration-500 border text-left w-full outline-none overflow-hidden
-                                        ${isActive
-                                            ? 'bg-zinc-900/40 backdrop-blur-md'
-                                            : 'bg-transparent border-transparent hover:bg-white/[0.02] opacity-60 hover:opacity-100'
-                                        }
-                                    `}
-                                >
-                                    {/* CONTENIDO DE LA TARJETA */}
-                                    <div className="flex items-start gap-5 relative z-10 pb-2"> {/* Added padding bottom for bar */}
-                                        <div
-                                            className={`
-                                                mt-1 p-3 rounded-xl transition-all duration-500
-                                                ${isActive ? 'text-white scale-110' : 'bg-white/5 text-zinc-500 group-hover:text-zinc-300'}
-                                            `}
-                                            style={isActive ? {
-                                                backgroundColor: feature.color,
-                                                boxShadow: `0 0 20px -5px ${feature.color}`
-                                            } : {}}
-                                        >
-                                            <feature.icon size={20} strokeWidth={2} />
-                                        </div>
-                                        <div>
-                                            <h3 className={`text-lg font-medium mb-2 transition-colors duration-300 ${isActive ? 'text-white' : 'text-zinc-400'}`}>
-                                                {feature.title}
-                                            </h3>
-                                            <p className={`text-sm leading-relaxed transition-colors duration-300 ${isActive ? 'text-zinc-300' : 'text-zinc-600'}`}>
-                                                {feature.description}
-                                            </p>
-                                        </div>
-                                    </div>
-
-                                    {/* --- LA NUEVA BARRA DE PROGRESO (DENTRO) --- */}
-                                    {/* Está posicionada dentro de la tarjeta, en la parte inferior, sutil */}
-                                    {isActive && (
-                                        <div className="absolute bottom-0 left-6 right-6 h-[3px] bg-zinc-800/50 rounded-full overflow-hidden mb-6">
-                                            <motion.div
-                                                className="h-full rounded-full"
-                                                style={{ backgroundColor: feature.color }}
-                                                initial={{ width: 0 }}
-                                                animate={{ width: "100%" }}
-                                                transition={{ duration: DURATION / 1000, ease: "linear" }}
-                                            />
-                                        </div>
-                                    )}
-                                </button>
-                            );
-                        })}
-                    </div>
-
-                    {/* ESCENARIO VISUAL (DERECHA) */}
-                    <div className="lg:col-span-7 h-[500px] lg:h-[600px] w-full relative group">
-                        {/* Contenedor del Visual */}
-                        <div className="sticky top-0 w-full h-full">
+                    {/* TEXT CONTENT (HERO STYLE) */}
+                    <div className="relative z-10 select-none flex flex-col justify-between h-full order-2 lg:order-1 py-12"
+                        onMouseDown={() => timer.setPaused(true)}
+                        onMouseUp={() => timer.setPaused(false)}
+                    >
+                        {/* Wrapper with fixed min-height to prevent jumping */}
+                        <div className="relative w-full min-h-[300px] flex flex-col justify-center">
                             <AnimatePresence mode="wait">
                                 <motion.div
-                                    key={activeIndex}
-                                    initial={{ opacity: 0, scale: 0.98, y: 10 }}
-                                    animate={{ opacity: 1, scale: 1, y: 0 }}
-                                    exit={{ opacity: 0, scale: 1.02 }}
-                                    transition={{ duration: 0.5, ease: "easeInOut" }}
-                                    className="w-full h-full p-4 md:p-8"
+                                    key={currentFeature.id}
+                                    variants={textVariants}
+                                    initial="enter"
+                                    animate="center"
+                                    exit="exit"
+                                    className="w-full"
                                 >
-                                    {/* Renderizado de Componentes */}
-                                    {activeIndex === 0 && <VisualCapture />}
-                                    {activeIndex === 1 && <VisualContext />}
-                                    {activeIndex === 2 && <VisualAction />}
-                                    {activeIndex === 3 && <VisualGrowth />}
+                                    <div
+                                        className="p-3 w-fit rounded-xl flex items-center justify-center mb-8 transition-colors duration-500"
+                                        style={{ backgroundColor: `${currentFeature.color}15`, color: currentFeature.color }}
+                                    >
+                                        <currentFeature.icon size={32} strokeWidth={2} />
+                                    </div>
+
+                                    <h2 className="text-5xl md:text-6xl lg:text-7xl font-medium text-white mb-6 leading-[1.1] tracking-tight">
+                                        {currentFeature.title}
+                                    </h2>
+                                    <p className="text-xl md:text-2xl text-zinc-400 leading-relaxed max-w-lg font-light">
+                                        {currentFeature.description}
+                                    </p>
                                 </motion.div>
                             </AnimatePresence>
                         </div>
+
+                        {/* --- CONTROLS (Pinned to bottom of flex col) --- */}
+                        <div className="mt-8 flex items-center justify-between lg:justify-start gap-8">
+
+                            {/* PILL INDICATORS */}
+                            <div className="flex items-center gap-2 bg-zinc-900/50 p-2 rounded-full backdrop-blur-sm border border-white/5">
+                                {features.map((feature, index) => {
+                                    const isActive = activeIndex === index;
+                                    return (
+                                        <button
+                                            key={feature.id}
+                                            onClick={() => handleDotClick(index)}
+                                            className="relative h-2 rounded-full overflow-hidden transition-all duration-500 ease-out"
+                                            style={{
+                                                width: isActive ? '40px' : '8px',
+                                                backgroundColor: isActive ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.2)'
+                                            }}
+                                            aria-label={`Go to slide ${index + 1}`}
+                                        >
+                                            {isActive && (
+                                                <motion.div
+                                                    className="h-full w-full absolute top-0 left-0"
+                                                    style={{
+                                                        backgroundColor: feature.color,
+                                                        width: `${timer.progress}%`
+                                                    }}
+                                                    layoutId="active-pill-fill"
+                                                />
+                                            )}
+                                        </button>
+                                    );
+                                })}
+                            </div>
+
+                            {/* ARROWS */}
+                            <div className="flex gap-2">
+                                <button
+                                    onClick={handlePrev}
+                                    className="p-4 rounded-full bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white transition-colors"
+                                    aria-label="Previous"
+                                >
+                                    <ChevronLeft size={24} />
+                                </button>
+                                <button
+                                    onClick={handleNext}
+                                    className="p-4 rounded-full bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white transition-colors"
+                                    aria-label="Next"
+                                >
+                                    <ChevronRight size={24} />
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    {/* VISUAL CONTENT (Static Position, Crossfade) */}
+                    <div className="order-1 lg:order-2 relative h-[400px] md:h-[600px] w-full flex items-center justify-center">
+                        <Suspense fallback={<div className="w-full h-full flex items-center justify-center"><Loader2 className="animate-spin text-zinc-800" /></div>}>
+                            <AnimatePresence mode="wait">
+                                <motion.div
+                                    key={currentFeature.id}
+                                    variants={visualVariants}
+                                    initial="enter"
+                                    animate="center"
+                                    exit="exit"
+                                    className="absolute inset-0 w-full h-full"
+                                    style={{ zIndex: 1 }}
+                                >
+                                    <currentFeature.Component />
+                                </motion.div>
+                            </AnimatePresence>
+                        </Suspense>
                     </div>
 
                 </div>
             </div>
+
         </section>
     );
 };

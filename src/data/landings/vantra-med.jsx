@@ -7,6 +7,7 @@ export const vantraMedData = {
         secondary: '#ffffff'
     },
     hero: {
+        badge: 'EL NUEVO ESTÁNDAR',
         title: 'Tu consultorio, <span style="color:var(--product-primary)">automatizado.</span>',
         subtitle: 'Unificamos <span class="text-white font-medium">Agenda, WhatsApp e Historial</span> en una plataforma que gestiona tus pacientes en piloto automático. Menos tareas administrativas, más <span class="text-white font-medium">medicina real.</span>',
         benefits: ['Respuestas inmediatas', 'Agenda blindada', 'Historial ordenado', 'Cero ausentismo'],

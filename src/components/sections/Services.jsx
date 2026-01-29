@@ -118,7 +118,7 @@ const Services = () => {
                 variants={itemVariants}
                 className={`${colSpan} h-full`}
               >
-                <Card className="relative h-full p-8 md:p-10 flex flex-col overflow-hidden group bg-[#0A0A12]/60 hover:bg-[#0A0A12]/90 transition-colors duration-500 border-white/5 hover:border-[#EDF246]/50">
+                <Card className="relative h-full p-8 md:p-10 flex flex-col overflow-hidden group bg-[#08080A]/60 hover:bg-[#08080A]/90 transition-colors duration-500 border-white/5 hover:border-[#EDF246]/50">
 
                   {/* BACKGROUND WATERMARK ICON */}
                   <div className="absolute -right-8 -bottom-8 text-white opacity-[0.03] group-hover:opacity-[0.08] transition-all duration-500 pointer-events-none transform rotate-[-10deg] scale-150 group-hover:scale-[1.6] group-hover:rotate-0 ease-out">

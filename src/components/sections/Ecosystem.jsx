@@ -1,55 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import {
     Utensils,
     HeartPulse,
     ArrowRight,
-    Zap,
-    Lock
+    Zap
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import EcosystemDashboard from '../visuals/EcosystemDashboard';
+
+// ==========================================
+// 2. MAIN COMPONENT
+// ==========================================
 
 const CYCLE_DURATION = 5000;
 
-// --- PLACEHOLDERS ---
-const RestoPlaceholder = () => (
-    <div className="w-full h-full flex flex-col items-center justify-center relative p-8">
-        <div className="w-full h-full rounded-xl border border-dashed border-[#F97316]/20 bg-[#F97316]/5 flex flex-col items-center justify-center gap-4">
-            <Utensils size={40} className="text-[#F97316] opacity-80" />
-            <div className="text-center">
-                <h3 className="text-white font-display text-lg tracking-wide">Dashboard Resto</h3>
-                <p className="text-white/40 text-xs mt-2">LOADING_MODULE...</p>
-            </div>
-        </div>
-    </div>
-);
-
-const MedPlaceholder = () => (
-    <div className="w-full h-full flex flex-col items-center justify-center relative p-8">
-        <div className="w-full h-full rounded-xl border border-dashed border-[#06B6D4]/20 bg-[#06B6D4]/5 flex flex-col items-center justify-center gap-4">
-            <HeartPulse size={40} className="text-[#06B6D4] opacity-80" />
-            <div className="text-center">
-                <h3 className="text-white font-display text-lg tracking-wide">Dashboard Med</h3>
-                <p className="text-white/40 text-xs mt-2">LOADING_MODULE...</p>
-            </div>
-        </div>
-    </div>
-);
-
-// --- SECTORS CONFIG ---
 const SECTORS = [
-    {
-        id: 'resto',
-        label: 'Gastronomía',
-        tagline: 'Gestión que vuela',
-        description: 'Potenciá tu local. Reservas, cocina y números claros en un solo lugar.',
-        icon: Utensils,
-        color: '#F97316',
-        gradient: 'linear-gradient(135deg, #F97316 0%, #FDBA74 100%)',
-        glow: 'rgba(249, 115, 22, 0.6)',
-        href: '/resto-product',
-        Component: RestoPlaceholder
-    },
     {
         id: 'med',
         label: 'Medicina',
@@ -57,10 +23,20 @@ const SECTORS = [
         description: 'Consultorios del futuro. Historia clínica y turnos con seguridad bancaria.',
         icon: HeartPulse,
         color: '#06B6D4',
-        gradient: 'linear-gradient(135deg, #06B6D4 0%, #67E8F9 100%)',
         glow: 'rgba(6, 182, 212, 0.6)',
-        href: '/med-product',
-        Component: MedPlaceholder
+        href: '/med',
+        theme: 'light'
+    },
+    {
+        id: 'resto',
+        label: 'Gastronomía',
+        tagline: 'Gestión que vuela',
+        description: 'Potenciá tu local. Reservas, cocina y números claros en un solo lugar.',
+        icon: Utensils,
+        color: '#F97316',
+        glow: 'rgba(249, 115, 22, 0.6)',
+        href: '/resto',
+        theme: 'dark'
     }
 ];
 
@@ -70,20 +46,8 @@ const Ecosystem = () => {
 
     const activeSector = SECTORS[activeIndex];
 
-    // --- AUTOPLAY CORREGIDO ---
-    useEffect(() => {
-        // Si está pausado, no hacemos nada y limpiamos intervalos previos
-        if (isPaused) return;
+    // --- AUTOPLAY LOGIC ---
 
-        const timer = setInterval(() => {
-            setActiveIndex((current) => (current + 1) % SECTORS.length);
-        }, CYCLE_DURATION);
-
-        // LIMPIEZA CRÍTICA: Cada vez que cambia isPaused O activeIndex,
-        // el reloj anterior se destruye. Esto evita el "desfase".
-        return () => clearInterval(timer);
-
-    }, [isPaused, activeIndex]); // <--- AQUÍ ESTABA LA CLAVE: Agregamos activeIndex
 
     return (
         <section
@@ -144,7 +108,6 @@ const Ecosystem = () => {
                             return (
                                 <button
                                     key={sector.id}
-                                    // Al hacer click, el useEffect detecta el cambio de activeIndex y reinicia el timer
                                     onClick={() => setActiveIndex(index)}
                                     className={`
                                         group relative w-full text-left pl-6 py-2 transition-all duration-500
@@ -194,16 +157,16 @@ const Ecosystem = () => {
                                     {isActive && (
                                         <div className="absolute left-0 top-1 bottom-1 w-[2px] bg-white/10 rounded-full overflow-hidden">
                                             <div
-                                                key={index} // Reset animation on index change
+                                                key={index}
                                                 className="w-full bg-white shadow-[0_0_10px_currentColor]"
                                                 style={{
                                                     backgroundColor: sector.color,
                                                     color: sector.color,
                                                     height: '0%',
-                                                    // La animación ahora siempre empieza de 0 cuando cambia el index
                                                     animation: `fillHeight ${CYCLE_DURATION}ms linear forwards`,
                                                     animationPlayState: isPaused ? 'paused' : 'running'
                                                 }}
+                                                onAnimationEnd={() => setActiveIndex((current) => (current + 1) % SECTORS.length)}
                                             />
                                         </div>
                                     )}
@@ -216,13 +179,13 @@ const Ecosystem = () => {
                     <div className="mt-12 pl-8">
                         <Link
                             to={activeSector.href}
-                            className="group relative inline-flex items-center gap-3 px-8 py-3 rounded-2xl overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:shadow-lg"
+                            className="group relative inline-flex items-center gap-3 px-10 py-4 rounded-xl overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:shadow-lg whitespace-nowrap"
                             style={{
                                 backgroundColor: activeSector.color,
                                 boxShadow: `0 0 20px -5px ${activeSector.color}80`
                             }}
                         >
-                            <span className="relative font-semibold text-white text-sm tracking-wide z-10">
+                            <span className="relative font-bold text-white text-sm uppercase tracking-widest z-10">
                                 Ver {activeSector.label}
                             </span>
                             <ArrowRight size={18} className="text-white relative z-10 transition-transform group-hover:translate-x-1" />
@@ -231,7 +194,7 @@ const Ecosystem = () => {
                 </div>
 
                 {/* ==========================================
-                    2. VISOR PRINCIPAL (Derecha)
+                    2. VISOR PRINCIPAL (Derecha) - WITH BLUR/REVEAL
                    ========================================== */}
                 <div className="w-full lg:w-2/3 perspective-1000 h-[500px] lg:h-[650px] relative flex justify-center items-center"
                     onMouseEnter={() => setIsPaused(true)}
@@ -251,7 +214,7 @@ const Ecosystem = () => {
                         />
                     </AnimatePresence>
 
-                    {/* LA VENTANA */}
+                    {/* LA VENTANA PORTAL */}
                     <AnimatePresence mode="wait">
                         <motion.div
                             key={activeSector.id}
@@ -261,34 +224,14 @@ const Ecosystem = () => {
                             transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
                             className="w-full h-full relative"
                         >
-                            {/* CONTENEDOR GLASS */}
-                            <div
-                                className="w-full h-full rounded-2xl overflow-hidden border bg-[#080808]/60 backdrop-blur-2xl shadow-2xl flex flex-col relative"
-                                style={{
-                                    borderColor: 'rgba(255,255,255,0.08)',
-                                    boxShadow: `0 25px 60px -20px ${activeSector.color}20`
-                                }}
+                            <Link
+                                to={activeSector.href}
+                                className="w-full h-full block cursor-pointer group relative"
                             >
-                                {/* HEADER VENTANA */}
-                                <div className="h-12 bg-white/5 border-b border-white/5 flex items-center justify-between px-5 select-none z-20">
-                                    <div className="flex gap-2">
-                                        <div className="w-3 h-3 rounded-full bg-[#FF5F57] opacity-80" />
-                                        <div className="w-3 h-3 rounded-full bg-[#FEBC2E] opacity-80" />
-                                        <div className="w-3 h-3 rounded-full bg-[#28C840] opacity-80" />
-                                    </div>
-                                    <div className="w-12" />
-                                    <div className="w-12" />
-                                </div>
+                                {/* CONTENEDOR GLASS */}
+                                <EcosystemDashboard theme={activeSector.theme} color={activeSector.color} />
+                            </Link>
 
-                                {/* ÁREA DE DASHBOARD */}
-                                <div className="flex-1 relative w-full h-full overflow-hidden">
-                                    <activeSector.Component />
-
-                                    {/* Reflejo Glass sutil */}
-                                    <div className="absolute inset-0 pointer-events-none bg-gradient-to-tr from-white/5 to-transparent opacity-10" />
-                                </div>
-
-                            </div>
                         </motion.div>
                     </AnimatePresence>
                 </div>

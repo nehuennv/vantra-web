@@ -99,7 +99,7 @@ const GlobalCursor = () => {
     // Renderizar en el body
     return createPortal(
         <motion.div
-            className="fixed top-0 left-0 pointer-events-none z-[99999] mix-blend-exclusion"
+            className="fixed top-0 left-0 pointer-events-none z-[200000] mix-blend-exclusion"
             style={{
                 opacity: isVisible ? 1 : 0,
                 // Usamos una transición suave para la opacidad

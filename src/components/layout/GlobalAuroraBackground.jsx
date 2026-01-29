@@ -1,9 +1,12 @@
 import React from 'react';
-import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
+import { motion, useScroll, useTransform, useSpring, AnimatePresence } from 'framer-motion';
+import { useLocation } from 'react-router-dom';
 import BackgroundImage from '../../assets/complete-background.png';
+import MedicalImage from '../../assets/complete-background-medical.png';
 
 const GlobalAuroraBackground = () => {
     const { scrollYProgress } = useScroll();
+    const location = useLocation();
 
     // Soft physics for the rotation
     const smoothProgress = useSpring(scrollYProgress, {
@@ -21,7 +24,7 @@ const GlobalAuroraBackground = () => {
 
     // Passive breathing animation
     const breatheAnimation = {
-        scale: [1, 1.05, 1], // Micro-breathing
+        scale: [1, 1.05, 1],
         opacity: [0.6, 0.7, 0.6],
         transition: {
             duration: 18,
@@ -29,6 +32,11 @@ const GlobalAuroraBackground = () => {
             ease: "easeInOut"
         }
     };
+
+    // Determine which background to show
+    const isMedPage = location.pathname === '/med';
+    const activeImage = isMedPage ? MedicalImage : BackgroundImage;
+    const activeKey = isMedPage ? 'med-bg' : 'home-bg';
 
     return (
         // OPTIMIZATION FIXED: Use Flexbox for centering to avoid transform conflicts
@@ -50,13 +58,20 @@ const GlobalAuroraBackground = () => {
                 {/* Breathing Animation Wrapper */}
                 <motion.div
                     animate={breatheAnimation}
-                    className="w-full h-full"
+                    className="w-full h-full relative"
                 >
-                    <img
-                        src={BackgroundImage}
-                        alt=""
-                        className="w-full h-full object-cover opacity-70"
-                    />
+                    <AnimatePresence mode="popLayout">
+                        <motion.img
+                            key={activeKey}
+                            src={activeImage}
+                            alt=""
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 0.7 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 1.5 }}
+                            className="absolute inset-0 w-full h-full object-cover"
+                        />
+                    </AnimatePresence>
                 </motion.div>
             </motion.div>
 

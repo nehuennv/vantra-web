@@ -11,6 +11,19 @@ import Footer from '../layout/Footer';
 
 const ProductLandingTemplate = ({ data }) => {
     const { theme, hero, presentation, problem, solution, demo, pricing, cta } = data;
+    const [selectedPlan, setSelectedPlan] = React.useState(null);
+
+
+
+    const handlePlanSelect = (planName) => {
+        setSelectedPlan(planName);
+        setTimeout(() => {
+            const element = document.getElementById('consultation-form') || document.getElementById('cta-section');
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }, 100);
+    };
 
     // Set CSS variables for theme colors
     useEffect(() => {
@@ -39,12 +52,28 @@ const ProductLandingTemplate = ({ data }) => {
     if (!data) return null;
 
     return (
-        <div className="min-h-screen bg-vantra-bg text-white overflow-hidden selection:bg-[color:var(--product-primary)] selection:text-black font-sans">
+        <div className="min-h-screen text-white overflow-hidden selection:bg-[color:var(--product-primary)] selection:text-black font-sans">
 
             {/* Dynamic Background Wrapper */}
-            <div className="fixed inset-0 z-0 pointer-events-none">
-                {/* Glow Effect */}
-                {/* Glow Effect - Restored to provide the Product Color (Celeste) */}
+            <div className="fixed inset-0 z-0 pointer-events-none flex items-center justify-center overflow-hidden">
+
+                {/* Default Glow Effects (Only shown if no global background overrides, but for now we keep them as accent) */}
+                {/* Actually, user wants the IMAGE. If GlobalAuroraBackground is showing the image, we don't need glows blocking it? 
+                   But GlobalAuroraBackground is BEHIND everything. 
+                   If we leave glows, they will overlay the global background image.
+                   The template originally had glows. 
+                   If the user wants "just the background", we should probably hide the template glows on /med?
+                   Currently, the template doesn't know about /med.
+                   But we essentially "removed" the opaque background of the template by removing 'bg-vantra-bg'.
+                   We can just comment out the glows or leave them as subtle accents.
+                   Let's keep them but make them conditional or just leave them if they look good.
+                   Wait, the previous logic replaced glows with image.
+                   If I leave glows, they will appear ON TOP of the global image.
+                   Maybe I should remove the glows entirely if the goal is the image?
+                   Let's remove the glows for now or check if data has a flag.
+                   Actually, let's just stick to the clean revert but minus the background color. 
+                */}
+
                 <div
                     className="absolute top-[-20%] left-[20%] w-[900px] h-[900px] rounded-full blur-[130px] opacity-20 transition-colors duration-1000"
                     style={{ backgroundColor: 'var(--product-primary)' }}
@@ -54,21 +83,7 @@ const ProductLandingTemplate = ({ data }) => {
                     style={{ backgroundColor: 'var(--product-primary)' }}
                 />
 
-                {/* MOVING DOTS PATTERN (Global for Product Template) */}
-                <div
-                    className="absolute inset-0 z-0 opacity-30" // Increased from 20 to 30
-                    style={{
-                        backgroundImage: 'radial-gradient(rgba(255,255,255,0.25) 1px, transparent 1px)', // Increased brightness
-                        backgroundSize: '30px 30px',
-                        animation: 'dotsMove 60s linear infinite'
-                    }}
-                />
-                <style>{`
-                    @keyframes dotsMove {
-                        0% { background-position: 0 0; }
-                        100% { background-position: 30px 30px; }
-                    }
-                `}</style>
+
 
                 {/* LAYER 2: THE WAVE (The Scanner) */}
                 <motion.div
@@ -114,9 +129,11 @@ const ProductLandingTemplate = ({ data }) => {
 
                 {demo && <DemoSection data={demo} theme={theme} />}
 
-                {pricing && <PricingSection data={pricing} theme={theme} />}
+                {pricing && <PricingSection data={pricing} theme={theme} onPlanSelect={handlePlanSelect} />}
 
-                {cta && <CTASection data={cta} theme={theme} />}
+                <div id="cta-section">
+                    {cta && <CTASection data={cta} theme={theme} preSelectedPlan={selectedPlan} />}
+                </div>
 
                 <Footer />
 

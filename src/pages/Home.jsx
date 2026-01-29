@@ -1,10 +1,9 @@
 import React from 'react';
 import Hero from '../components/sections/Hero';
 import Services from '../components/sections/Services';
-import PricingCarousel from '../components/sections/PricingCarousel';
+import UnifiedServices from '../components/sections/UnifiedServices';
 import Meeting from '../components/sections/Meeting';
 import Ecosystem from '../components/sections/Ecosystem';
-import Differential from '../components/sections/Differential';
 import FAQ from '../components/sections/FAQ';
 import Footer from '../components/layout/Footer';
 
@@ -14,8 +13,7 @@ const Home = () => {
       <Hero />
       <Services />
       <Ecosystem />
-      <Differential />
-      <PricingCarousel />
+      <UnifiedServices />
       <Meeting />
       <FAQ />
       <Footer />

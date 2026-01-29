@@ -3,31 +3,30 @@ import { motion } from 'framer-motion';
 import { Check, Star, ArrowRight } from 'lucide-react';
 import Button from '../../ui/Button';
 
-const PricingSection = ({ data }) => {
+const PricingSection = ({ data, onPlanSelect }) => {
     const { title, subtitle, plans } = data;
     const [hoveredIndex, setHoveredIndex] = useState(null);
 
-    // Variantes para orquestar la animación de entrada perfecta (sin glitches)
+    // Variantes para orquestar la animación de entrada perfecta
     const containerVariants = {
         hidden: { opacity: 0 },
         visible: {
             opacity: 1,
             transition: {
-                staggerChildren: 0.15, // Retraso entre cada card
+                staggerChildren: 0.15,
                 delayChildren: 0.2
             }
         }
     };
 
     const cardVariants = {
-        hidden: { opacity: 0, y: 40 },
+        hidden: { opacity: 0, y: 30 },
         visible: {
             opacity: 1,
             y: 0,
             transition: {
-                type: "spring",
-                stiffness: 50,
-                damping: 20
+                duration: 0.6,
+                ease: "easeOut"
             }
         }
     };
@@ -36,7 +35,7 @@ const PricingSection = ({ data }) => {
         <section className="py-24 px-6 relative overflow-hidden">
 
             {/* Fondo limpio y oscuro */}
-            <div className="absolute inset-0" />
+            <div className="absolute inset-0 pointer-events-none" />
 
             <div className="container mx-auto max-w-7xl relative z-10">
 
@@ -67,7 +66,7 @@ const PricingSection = ({ data }) => {
                     variants={containerVariants}
                     initial="hidden"
                     whileInView="visible"
-                    viewport={{ once: true, margin: "-100px" }} // Margen para asegurar que cargue bien
+                    viewport={{ once: true, margin: "-100px" }}
                 >
                     {plans.map((plan, idx) => {
                         const isHighlight = plan.highlight === true;
@@ -79,48 +78,46 @@ const PricingSection = ({ data }) => {
                                 variants={cardVariants}
                                 onMouseEnter={() => setHoveredIndex(idx)}
                                 onMouseLeave={() => setHoveredIndex(null)}
-                                className="relative flex flex-col h-full rounded-[24px] overflow-hidden group"
+                                className={`
+                                    group relative flex flex-col h-full rounded-[24px] overflow-hidden transition-all duration-500 ease-out
+                                    /* ESTILO BASE: Glassmorphism (Transparente + Blur) */
+                                    bg-zinc-900/60 backdrop-blur-2xl
+                                    /* BORDE: Unificado */
+                                    border border-white/10
+                                    /* HOVER BASE (Sutil aclarado) */
+                                    hover:bg-zinc-900/60
+                                `}
                                 style={{
-                                    // FONDO UNIFICADO: Todas tienen el mismo peso visual base.
-                                    backgroundColor: '#18181b', // Zinc-900 sólido y limpio
-
-                                    // BORDE: Control total.
-                                    // Highlight: Color primario.
-                                    // Normal: Zinc-800 (Gris oscuro).
-                                    // Hover (Normal): Se ilumina un poco.
-                                    borderWidth: '1px',
-                                    borderStyle: 'solid',
-                                    borderColor: isHighlight
-                                        ? 'var(--product-primary)'
-                                        : (isHovered ? '#52525b' : '#27272a'), // Hover: Zinc-600, Normal: Zinc-800
-
-                                    // SOMBRA: Solo luz ambiental del color primario en la destacada o hover.
-                                    // Evitamos sombras verdes/default.
-                                    boxShadow: isHighlight
-                                        ? '0 0 40px -10px var(--product-primary-opacity-20, rgba(14, 165, 233, 0.2))'
-                                        : (isHovered ? '0 10px 30px -10px rgba(0,0,0,0.5)' : 'none'),
-
-                                    transition: 'all 0.3s ease-out'
+                                    // Borde highlight en hover o si es destacado
+                                    borderColor: isHighlight || isHovered
+                                        ? 'var(--product-primary-opacity-50, rgba(255,255,255,0.2))'
+                                        : 'rgba(255,255,255,0.1)',
                                 }}
                             >
-                                {/* --- CONTENIDO --- */}
+                                {/* 1. INNER GLOW (Variable Color) */}
+                                <div
+                                    className="absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                                    style={{
+                                        backgroundImage: `linear-gradient(to bottom right, transparent 0%, transparent 40%, var(--product-primary-opacity-10, rgba(255,255,255,0.05)) 100%)`
+                                    }}
+                                />
+
+                                {/* 2. CONTENIDO */}
                                 <div className="p-8 flex flex-col h-full relative z-10">
 
                                     {/* Header + Badge */}
                                     <div className="flex justify-between items-start mb-6 h-8">
-                                        <h3 className="text-2xl font-medium tracking-tight text-white transition-colors duration-300">
+                                        <h3 className="text-2xl font-medium tracking-tight text-white transition-colors duration-300 group-hover:text-[var(--product-primary)]">
                                             {plan.title}
                                         </h3>
 
-                                        {/* Badge Corregido: Estilos hardcoded para evitar bordes blancos */}
                                         {isHighlight && (
                                             <div
                                                 className="px-3 py-1 rounded-full flex items-center gap-1.5"
                                                 style={{
                                                     backgroundColor: 'var(--product-primary-opacity-10, rgba(14, 165, 233, 0.1))',
-                                                    border: '1px solid var(--product-primary)', // Color explícito
+                                                    border: '1px solid var(--product-primary)',
                                                     color: 'var(--product-primary)',
-                                                    boxShadow: 'none'
                                                 }}
                                             >
                                                 <Star size={10} fill="currentColor" strokeWidth={0} />
@@ -131,7 +128,7 @@ const PricingSection = ({ data }) => {
                                         )}
                                     </div>
 
-                                    {/* Descripción Legible */}
+                                    {/* Descripción */}
                                     <p className="text-zinc-400 text-sm leading-relaxed mb-8 min-h-[48px] transition-colors duration-300 group-hover:text-zinc-300">
                                         {plan.description}
                                     </p>
@@ -139,7 +136,7 @@ const PricingSection = ({ data }) => {
                                     {/* Separador */}
                                     <div
                                         className="w-full h-px mb-8 transition-colors duration-300"
-                                        style={{ backgroundColor: isHighlight ? 'var(--product-primary-opacity-30, rgba(14,165,233,0.3))' : '#27272a' }}
+                                        style={{ backgroundColor: isHighlight ? 'var(--product-primary-opacity-30, rgba(14,165,233,0.3))' : 'rgba(255,255,255,0.1)' }}
                                     />
 
                                     {/* Features List */}
@@ -150,7 +147,7 @@ const PricingSection = ({ data }) => {
                                                 <div
                                                     className="mt-0.5 relative flex items-center justify-center shrink-0 rounded-full transition-all duration-300"
                                                     style={{
-                                                        color: isHighlight || isHovered ? 'var(--product-primary)' : '#52525b', // Zinc-600
+                                                        color: isHighlight || isHovered ? 'var(--product-primary)' : '#52525b',
                                                     }}
                                                 >
                                                     <Check
@@ -171,20 +168,20 @@ const PricingSection = ({ data }) => {
                                     <div className="mt-auto">
                                         <Button
                                             className="w-full h-12 text-sm rounded-xl font-medium tracking-wide transition-all duration-300 flex items-center justify-center gap-2"
+                                            onClick={() => onPlanSelect && onPlanSelect(plan.title)}
                                             style={{
-                                                // Highlight: Color sólido. Normal: Outline que se llena al hover.
                                                 backgroundColor: isHighlight
                                                     ? 'var(--product-primary)'
-                                                    : (isHovered ? '#fff' : 'transparent'),
+                                                    : (isHovered ? 'white' : 'transparent'),
 
                                                 color: isHighlight
                                                     ? 'var(--product-on-primary, #18181b)'
-                                                    : (isHovered ? '#000' : '#fff'),
+                                                    : (isHovered ? 'black' : 'white'),
 
                                                 border: '1px solid',
                                                 borderColor: isHighlight
                                                     ? 'var(--product-primary)'
-                                                    : (isHovered ? '#fff' : '#3f3f46'), // Zinc-700
+                                                    : (isHovered ? 'white' : 'rgba(255,255,255,0.2)'),
 
                                                 cursor: 'pointer'
                                             }}
@@ -197,6 +194,12 @@ const PricingSection = ({ data }) => {
                                         </Button>
                                     </div>
                                 </div>
+
+                                {/* 3. HOVER LINE (La barra inferior que se expande) */}
+                                <div
+                                    className="absolute bottom-0 left-0 h-1 w-0 group-hover:w-full transition-all duration-500 ease-in-out"
+                                    style={{ backgroundColor: 'var(--product-primary)' }}
+                                />
                             </motion.div>
                         );
                     })}
